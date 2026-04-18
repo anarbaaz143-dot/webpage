@@ -11,14 +11,14 @@ export default function AdminLogin() {
   async function handleLogin() {
     setLoading(true);
     setError("");
-    const res = await fetch("/api/admin-login", {
+    const res = await fetch("/api/propoye-login", {
       method: "POST",
       body: JSON.stringify({ password }),
       headers: { "Content-Type": "application/json" },
     });
 
     if (res.ok) {
-      router.push("/admin");
+      router.push("/propoye2026");
     } else {
       setError("Wrong password");
     }
