@@ -237,7 +237,12 @@ export default function MainLayout({
                 className="h-12 w-auto object-contain mb-3 opacity-80 mx-auto md:mx-0 brightness-0 invert"
               />
               <p className="text-sm text-gray-500 max-w-xs leading-relaxed">
-                Premium real estate curated for discerning buyers and investors.
+                Disclaimer:
+
+We are an authorized marketing partner Maharashtra RERA ID: A51800046254 for this project. 
+Provided content is given by respective owners and this website and content is for information purpose only and it does not constitute any offer to avail for any services. 
+Prices mentioned are subject to change without prior notice and properties mentioned are subject to availability. 
+You can expect a call, SMS or emails on details registered with us.
               </p>
             </div>
 
