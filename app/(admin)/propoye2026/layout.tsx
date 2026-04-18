@@ -582,8 +582,8 @@ export default function AdminLayout() {
   <div className="flex justify-between text-xs text-gray-500"><span>Trending</span><span className="text-amber-400 font-bold">{trendingCount}</span></div>
   <button
     onClick={async () => {
-      await fetch("/api/propoye-login", { method: "POST" });
-      window.location.href = "/propoye-login";
+      await fetch("/api/propoye2026-login", { method: "POST" });
+      window.location.href = "/propoye2026-login";
     }}
     className="w-full flex items-center justify-center gap-2 mt-2 py-2.5 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-400 font-semibold rounded-xl transition text-sm"
   >
