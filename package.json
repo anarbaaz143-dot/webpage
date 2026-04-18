@@ -2,13 +2,13 @@
   "name": "real-estate-app",
   "version": "0.1.0",
   "private": true,
-  "scripts": {
-    "postinstall": "prisma generate",
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
-  },
+"scripts": {
+  "postinstall": "prisma generate",
+  "dev": "next dev",
+  "build": "next build",
+  "start": "next start",
+  "lint": "eslint"
+},
   "dependencies": {
     "@prisma/client": "^7.4.1",
     "cloudinary": "^2.9.0",
