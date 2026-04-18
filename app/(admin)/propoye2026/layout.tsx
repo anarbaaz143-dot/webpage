@@ -583,7 +583,7 @@ export default function AdminLayout() {
   <button
     onClick={async () => {
       await fetch("/api/propoye-login", { method: "POST" });
-      window.location.href = "/admin-login";
+      window.location.href = "/propoye-login";
     }}
     className="w-full flex items-center justify-center gap-2 mt-2 py-2.5 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-400 font-semibold rounded-xl transition text-sm"
   >
