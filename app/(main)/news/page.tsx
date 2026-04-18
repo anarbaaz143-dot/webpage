@@ -1,0 +1,140 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import Link from "next/link";
+
+const CATEGORIES = ["All", "Market Update", "New Launch", "Policy", "Investment", "Lifestyle"];
+
+type Article = {
+  id: number;
+  title: string;
+  summary: string;
+  image: string;
+  category: string;
+  publishedAt: string;
+};
+
+export default function NewsPage() {
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [activeCategory, setActiveCategory] = useState("All");
+
+  useEffect(() => {
+    fetch("/api/news")
+      .then((r) => r.json())
+      .then((data) => { setArticles(data); setLoading(false); });
+  }, []);
+
+  const filtered = activeCategory === "All"
+    ? articles
+    : articles.filter((a) => a.category === activeCategory);
+
+  return (
+    <div className="min-h-screen bg-white font-sans">
+
+      {/* Hero */}
+      <section className="bg-gray-950 py-24 px-6 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-5" style={{ backgroundImage: "radial-gradient(circle at 2px 2px, white 1px, transparent 0)", backgroundSize: "32px 32px" }} />
+        <div className="absolute top-10 left-20 w-72 h-72 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="relative max-w-4xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
+            className="inline-flex items-center gap-2 bg-amber-400/10 border border-amber-400/30 rounded-full px-4 py-1.5 text-amber-400 text-xs font-bold tracking-widest uppercase mb-6"
+          >
+            📰 Real Estate News
+          </motion.div>
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}
+            className="text-5xl md:text-6xl font-extrabold text-white mb-4 leading-tight"
+            style={{ fontFamily: "'Playfair Display', serif" }}
+          >
+            Market <span className="text-amber-400">Insights</span>
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-gray-400 text-lg max-w-xl mx-auto"
+          >
+            Stay ahead with the latest real estate updates, new launches, and policy changes curated by the Propoye team.
+          </motion.p>
+        </div>
+      </section>
+
+      {/* Category filter */}
+      <section className="sticky top-[7rem] z-30 bg-white border-b border-gray-100 shadow-sm">
+        <div className="max-w-6xl mx-auto px-6 py-3 flex gap-2 overflow-x-auto scrollbar-hide">
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              className={`flex-shrink-0 px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+                activeCategory === cat
+                  ? "bg-amber-400 text-gray-900 shadow-md"
+                  : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {/* Articles grid */}
+      <section className="max-w-6xl mx-auto px-6 py-16">
+        {loading ? (
+          <div className="grid md:grid-cols-3 gap-6">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="bg-gray-100 rounded-3xl h-80 animate-pulse" />
+            ))}
+          </div>
+        ) : filtered.length === 0 ? (
+          <div className="text-center py-24 text-gray-400">
+            <p className="text-5xl mb-4">📭</p>
+            <p className="font-semibold text-lg">No articles in this category yet.</p>
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filtered.map((article, i) => (
+              <motion.div
+                key={article.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: i * 0.05 }}
+                viewport={{ once: true }}
+              >
+                <Link href={`/news/${article.id}`} className="group block bg-white border border-gray-100 rounded-3xl overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                  <div className="relative overflow-hidden h-48">
+                    <img
+                      src={article.image}
+                      alt={article.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    />
+                    <div className="absolute top-3 left-3 bg-amber-400 text-gray-900 text-xs font-bold px-3 py-1 rounded-full">
+                      {article.category}
+                    </div>
+                  </div>
+                  <div className="p-5">
+                    <p className="text-xs text-gray-400 mb-2">
+                      {new Date(article.publishedAt).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })}
+                    </p>
+                    <h2 className="font-extrabold text-gray-900 text-base leading-snug mb-2 group-hover:text-amber-600 transition-colors line-clamp-2"
+                      style={{ fontFamily: "'Playfair Display', serif" }}>
+                      {article.title}
+                    </h2>
+                    <p className="text-gray-500 text-sm line-clamp-2 leading-relaxed">{article.summary}</p>
+                    <div className="mt-4 flex items-center gap-1 text-amber-500 text-xs font-bold">
+                      Read more
+                      <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      </svg>
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        )}
+      </section>
+    </div>
+  );
+}

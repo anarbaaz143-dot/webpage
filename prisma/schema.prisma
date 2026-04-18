@@ -1,0 +1,76 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Property {
+  id                String   @id @default(cuid())
+  propoyeId         String   @unique
+  projectName       String
+  projectArea       String
+  location          String
+  address           String
+  floors            Int
+  towers            Int
+  possessionDate    String
+  configuration     String
+  pricingStartsFrom String
+  images            String[]
+  floorPlans        String[]
+  description       String   @default("")
+  isTrending        Boolean  @default(false)
+  createdAt         DateTime @default(now())
+}
+
+model Setting {
+  key   String @id
+  value String
+}
+
+model News {
+  id          Int      @id @default(autoincrement())
+  title       String
+  summary     String
+  content     String   @db.Text
+  image       String
+  category    String   @default("Market Update")
+  sourceUrl   String?
+  sourceLabel String?
+  publishedAt DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Blog {
+  id           Int      @id @default(autoincrement())
+  title        String
+  summary      String
+  content      String   @db.Text
+  instagramUrl String
+  category     String   @default("Tips")
+  publishedAt  DateTime @default(now())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Feedback {
+  id          Int    @id @default(autoincrement())
+  slot        Int    @unique
+  name        String
+  rating      Int
+  description String
+  createdAt   DateTime @default(now())
+}
+
+model Builder {
+  id            Int      @id @default(autoincrement())
+  name          String
+  description   String
+  image         String
+  established   String?
+  projectsCount String?
+  createdAt     DateTime @default(now())
+}
