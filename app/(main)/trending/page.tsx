@@ -69,7 +69,7 @@ export default async function TrendingPage() {
             </div>
           ) : (
             <div className="grid md:grid-cols-3 gap-8">
-              {trendingHomes.map((home, index) => (
+              {trendingHomes.map((home: (typeof trendingHomes)[0], index: number) => (
                 <Link
                   key={home.id}
                   href={`/property/${home.id}`}
