@@ -5,12 +5,12 @@ export function proxy(request: NextRequest) {
   const token = request.cookies.get("admin_token")?.value;
 
   if (!token) {
-    return NextResponse.redirect(new URL("/admin-login", request.url));
+    return NextResponse.redirect(new URL("/propoye2026-login", request.url));
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/propoye2026/:path*"],
 };
