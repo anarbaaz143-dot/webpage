@@ -1,5 +1,8 @@
+export const dynamic = "force-dynamic";
+
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
+
 
 export default async function TrendingPage() {
   const trendingHomes = await prisma.property.findMany({
