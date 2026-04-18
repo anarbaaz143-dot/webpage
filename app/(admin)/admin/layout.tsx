@@ -577,10 +577,19 @@ export default function AdminLayout() {
             </button>
           ))}
         </nav>
-        <div className="mt-auto pt-6 border-t border-white/5 px-2 space-y-3">
-          <div className="flex justify-between text-xs text-gray-500"><span>Total</span><span className="text-white font-bold">{properties.length}</span></div>
-          <div className="flex justify-between text-xs text-gray-500"><span>Trending</span><span className="text-amber-400 font-bold">{trendingCount}</span></div>
-        </div>
+<div className="mt-auto pt-6 border-t border-white/5 px-2 space-y-3">
+  <div className="flex justify-between text-xs text-gray-500"><span>Total</span><span className="text-white font-bold">{properties.length}</span></div>
+  <div className="flex justify-between text-xs text-gray-500"><span>Trending</span><span className="text-amber-400 font-bold">{trendingCount}</span></div>
+  <button
+    onClick={async () => {
+      await fetch("/api/admin-logout", { method: "POST" });
+      window.location.href = "/admin-login";
+    }}
+    className="w-full flex items-center justify-center gap-2 mt-2 py-2.5 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-400 font-semibold rounded-xl transition text-sm"
+  >
+    <FaTimes size={11} /> Logout
+  </button>
+</div>
       </aside>
 
       {/* ── Main ── */}
