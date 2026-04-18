@@ -13,8 +13,9 @@ export async function POST(req: NextRequest) {
   response.cookies.set("admin_token", process.env.ADMIN_SECRET!, {
     httpOnly: true,
     secure: true,
-    maxAge: 60 * 30,
+    sameSite: "strict",
     path: "/",
+    // no maxAge = session cookie, dies when browser closes
   });
 
   return response;

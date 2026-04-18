@@ -4,7 +4,7 @@ import type { NextRequest } from "next/server";
 export function proxy(request: NextRequest) {
   const token = request.cookies.get("admin_token")?.value;
 
-  if (!token || token !== process.env.ADMIN_SECRET) {
+  if (!token) {
     return NextResponse.redirect(new URL("/admin-login", request.url));
   }
 
