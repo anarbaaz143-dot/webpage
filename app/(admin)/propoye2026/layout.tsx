@@ -698,10 +698,6 @@ const resetForm = () => {
                       <Field label="Pricing Starts From" placeholder="e.g. ₹1.2 Cr" value={pricingStartsFrom} onChange={mkChange(setPricingStartsFrom, "pricingStartsFrom")} error={formErrors.pricingStartsFrom} />
                     </div>
 
-
-                    <div className="mt-4">
-  <Field label="Pricing Starts From" placeholder="e.g. ₹1.2 Cr" value={pricingStartsFrom} onChange={mkChange(setPricingStartsFrom, "pricingStartsFrom")} error={formErrors.pricingStartsFrom} />
-</div>
 <div className="mt-4">
   <Field 
     label="Builder Name" 
