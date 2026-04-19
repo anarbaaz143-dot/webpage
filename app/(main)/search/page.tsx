@@ -131,11 +131,21 @@ function PropertyCard({ property, now }: { property: any; now: Date }) {
               🔥 Trending
             </div>
           )}
-          {ready && (
-            <div className="inline-flex items-center gap-1 bg-green-400 text-green-900 text-[10px] font-extrabold px-2.5 py-1 rounded-full shadow">
-              ✓ Ready to Move
-            </div>
-          )}
+{property.isReadyToMove && (
+  <div className="inline-flex items-center gap-1 bg-green-400 text-green-900 text-[10px] font-extrabold px-2.5 py-1 rounded-full shadow">
+    ✓ Ready to Move
+  </div>
+)}
+{property.isUnderConstruction && (
+  <div className="inline-flex items-center gap-1 bg-orange-400 text-orange-900 text-[10px] font-extrabold px-2.5 py-1 rounded-full shadow">
+    🏗 Under Construction
+  </div>
+)}
+{property.isNewLaunch && (
+  <div className="inline-flex items-center gap-1 bg-blue-400 text-blue-900 text-[10px] font-extrabold px-2.5 py-1 rounded-full shadow">
+    🚀 New Launch
+  </div>
+)}
         </div>
 
         {/* Project area pill */}
@@ -294,6 +304,8 @@ useEffect(() => {
   const [activePriceIdx, setActivePriceIdx] = useState<number | null>(null);
   const [onlyTrending, setOnlyTrending] = useState(false);
   const [onlyReady, setOnlyReady] = useState(false);
+  const [onlyUnderConstruction, setOnlyUnderConstruction] = useState(false);
+const [onlyNewLaunch, setOnlyNewLaunch] = useState(false);
   const [sortKey, setSortKey] = useState<SortKey>("relevance");
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [showAllPrices, setShowAllPrices] = useState(false);
@@ -349,7 +361,7 @@ useEffect(() => {
   }, [allResults, activeBHK, activePriceIdx, onlyTrending, onlyReady, sortKey, now]);
 
   const filteredOut = allResults.length - results.length;
-  const hasFilters = activeBHK || activePriceIdx !== null || onlyTrending || onlyReady;
+  const hasFilters = activeBHK || activePriceIdx !== null || onlyTrending || onlyReady || onlyUnderConstruction || onlyNewLaunch;
 
   const clearFilters = () => {
     setActiveBHK(null); setActivePriceIdx(null);
@@ -456,6 +468,8 @@ useEffect(() => {
                 <div className="w-px h-4 bg-white/10 mx-1" />
                 <Chip label="Trending" active={onlyTrending} onClick={() => setOnlyTrending(!onlyTrending)} icon="🔥" />
                 <Chip label="Ready to Move" active={onlyReady} onClick={() => setOnlyReady(!onlyReady)} icon="✓" />
+<Chip label="Under Construction" active={onlyUnderConstruction} onClick={() => setOnlyUnderConstruction(!onlyUnderConstruction)} icon="🏗" />
+<Chip label="New Launch" active={onlyNewLaunch} onClick={() => setOnlyNewLaunch(!onlyNewLaunch)} icon="🚀" />
                 {hasFilters && (
                   <button onClick={clearFilters} className="ml-1 text-[10px] text-gray-600 hover:text-red-400 underline transition-colors font-medium">
                     Clear all
