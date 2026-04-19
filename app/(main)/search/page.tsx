@@ -353,7 +353,9 @@ useEffect(() => {
       });
     }
     if (onlyTrending) list = list.filter((p) => p.isTrending);
-    if (onlyReady) list = list.filter((p) => isReadyToMove(p.possessionDate || "", now));
+    if (onlyReady) list = list.filter((p) => p.isReadyToMove);
+if (onlyUnderConstruction) list = list.filter((p) => p.isUnderConstruction);
+if (onlyNewLaunch) list = list.filter((p) => p.isNewLaunch);
     if (sortKey === "price_asc") list.sort((a, b) => (parsePriceCr(a.pricingStartsFrom) ?? 999) - (parsePriceCr(b.pricingStartsFrom) ?? 999));
     else if (sortKey === "price_desc") list.sort((a, b) => (parsePriceCr(b.pricingStartsFrom) ?? 0) - (parsePriceCr(a.pricingStartsFrom) ?? 0));
     else if (sortKey === "newest") list.sort((a, b) => new Date(b.createdAt ?? 0).getTime() - new Date(a.createdAt ?? 0).getTime());
@@ -363,14 +365,17 @@ useEffect(() => {
   const filteredOut = allResults.length - results.length;
   const hasFilters = activeBHK || activePriceIdx !== null || onlyTrending || onlyReady || onlyUnderConstruction || onlyNewLaunch;
 
-  const clearFilters = () => {
-    setActiveBHK(null); setActivePriceIdx(null);
-    setOnlyTrending(false); setOnlyReady(false); setSortKey("relevance");
-  };
+const clearFilters = () => {
+  setActiveBHK(null); setActivePriceIdx(null);
+  setOnlyTrending(false); setOnlyReady(false);
+  setOnlyUnderConstruction(false); setOnlyNewLaunch(false);
+  setSortKey("relevance");
+};
 
   // Stats from results
   const stats = useMemo(() => {
     if (!allResults.length) return null;
+    
     const prices = allResults.map(p => parsePriceCr(p.pricingStartsFrom || "")).filter(Boolean) as number[];
     const minPrice = prices.length ? Math.min(...prices) : null;
     const maxPrice = prices.length ? Math.max(...prices) : null;
