@@ -22,6 +22,7 @@ model Property {
   images            String[]
   floorPlans        String[]
   description       String   @default("")
+  builderName       String   @default("")
   isTrending        Boolean  @default(false)
   createdAt         DateTime @default(now())
 }

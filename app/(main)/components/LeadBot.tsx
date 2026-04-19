@@ -42,7 +42,7 @@ export default function LeadBot() {
     if (!phone) return;
 
     const yourNumber = "919702162636";
-    const message = encodeURIComponent("Hello, I want help regarding houses");
+    const message = encodeURIComponent("Hi, I’m interested in your property . Please share more details.");
     window.open(`https://wa.me/${yourNumber}?text=${message}`, "_blank");
 
     setPhone("");
