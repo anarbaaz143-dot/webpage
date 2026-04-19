@@ -27,8 +27,11 @@ type Property = {
   images: string[];
   floorPlans: string[];
   isTrending: boolean;
+  isReadyToMove?: boolean;
+  isUnderConstruction?: boolean;
+  isNewLaunch?: boolean;
   description?: string;
-  builderName?: string;  // ← add this
+  builderName?: string;
 };
 
 type Toast = { id: number; message: string; type: "success" | "error" };
@@ -491,6 +494,51 @@ const resetForm = () => {
     }
   };
 
+  const toggleReadyToMove = async (property: Property) => {
+  try {
+    const res = await fetch("/api/property", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: property.id, isReadyToMove: !property.isReadyToMove }),
+    });
+    if (!res.ok) throw new Error();
+    showToast(property.isReadyToMove ? "Removed Ready to Move" : "Marked Ready to Move");
+    fetchProperties();
+  } catch {
+    showToast("Failed to update", "error");
+  }
+};
+
+const toggleUnderConstruction = async (property: Property) => {
+  try {
+    const res = await fetch("/api/property", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: property.id, isUnderConstruction: !property.isUnderConstruction }),
+    });
+    if (!res.ok) throw new Error();
+    showToast(property.isUnderConstruction ? "Removed Under Construction" : "Marked Under Construction");
+    fetchProperties();
+  } catch {
+    showToast("Failed to update", "error");
+  }
+};
+
+const toggleNewLaunch = async (property: Property) => {
+  try {
+    const res = await fetch("/api/property", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: property.id, isNewLaunch: !property.isNewLaunch }),
+    });
+    if (!res.ok) throw new Error();
+    showToast(property.isNewLaunch ? "Removed New Launch" : "Marked as New Launch");
+    fetchProperties();
+  } catch {
+    showToast("Failed to update", "error");
+  }
+};
+
   const handleEdit = (p: Property) => {
     setEditingId(p.id);
     setPropoyeId(p.propoyeId); setProjectName(p.projectName); setProjectArea(p.projectArea);
@@ -781,17 +829,27 @@ const resetForm = () => {
                             <FaAlignLeft size={10} />
                             {property.description?.trim() ? "Edit Description" : "Add Description"}
                           </button>
+
                           <div className="flex gap-2 mt-auto pt-3 border-t border-white/5">
-                            <a href={`/property/${property.id}`} target="_blank" rel="noopener noreferrer" title="View"
-                              className="flex items-center justify-center w-8 h-8 bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white rounded-lg transition text-xs"><FaEye /></a>
-                            <button onClick={() => handleEdit(property)} title="Edit"
-                              className="flex items-center justify-center w-8 h-8 bg-white/5 hover:bg-amber-400/20 text-gray-400 hover:text-amber-400 rounded-lg transition text-xs"><FaEdit /></button>
-                            <button onClick={() => toggleTrending(property)} title={property.isTrending ? "Remove from trending" : "Add to trending"}
-                              className={`flex items-center justify-center w-8 h-8 rounded-lg transition text-xs ${property.isTrending ? "bg-amber-400/20 text-amber-400 hover:bg-amber-400/30" : "bg-white/5 text-gray-500 hover:bg-amber-400/10 hover:text-amber-400"}`}>
-                              <FaFire /></button>
-                            <button onClick={() => setDeleteConfirmId(property.id)} title="Delete"
-                              className="flex items-center justify-center w-8 h-8 bg-white/5 hover:bg-red-500/20 text-gray-400 hover:text-red-400 rounded-lg transition text-xs ml-auto"><FaTrash /></button>
-                          </div>
+  <a href={`/property/${property.id}`} target="_blank" rel="noopener noreferrer" title="View"
+    className="flex items-center justify-center w-8 h-8 bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white rounded-lg transition text-xs"><FaEye /></a>
+  <button onClick={() => handleEdit(property)} title="Edit"
+    className="flex items-center justify-center w-8 h-8 bg-white/5 hover:bg-amber-400/20 text-gray-400 hover:text-amber-400 rounded-lg transition text-xs"><FaEdit /></button>
+  <button onClick={() => toggleReadyToMove(property)} title={property.isReadyToMove ? "Remove Ready to Move" : "Mark Ready to Move"}
+    className={`flex items-center justify-center w-8 h-8 rounded-lg transition text-xs font-bold ${property.isReadyToMove ? "bg-green-500/20 text-green-400 hover:bg-green-500/30" : "bg-white/5 text-gray-500 hover:bg-green-500/10 hover:text-green-400"}`}>
+    ✓</button>
+  <button onClick={() => toggleUnderConstruction(property)} title={property.isUnderConstruction ? "Remove Under Construction" : "Mark Under Construction"}
+    className={`flex items-center justify-center w-8 h-8 rounded-lg transition text-xs ${property.isUnderConstruction ? "bg-orange-500/20 text-orange-400 hover:bg-orange-500/30" : "bg-white/5 text-gray-500 hover:bg-orange-500/10 hover:text-orange-400"}`}>
+    🏗</button>
+  <button onClick={() => toggleNewLaunch(property)} title={property.isNewLaunch ? "Remove New Launch" : "Mark New Launch"}
+    className={`flex items-center justify-center w-8 h-8 rounded-lg transition text-xs ${property.isNewLaunch ? "bg-blue-500/20 text-blue-400 hover:bg-blue-500/30" : "bg-white/5 text-gray-500 hover:bg-blue-500/10 hover:text-blue-400"}`}>
+    🚀</button>
+  <button onClick={() => toggleTrending(property)} title={property.isTrending ? "Remove from trending" : "Add to trending"}
+    className={`flex items-center justify-center w-8 h-8 rounded-lg transition text-xs ${property.isTrending ? "bg-amber-400/20 text-amber-400 hover:bg-amber-400/30" : "bg-white/5 text-gray-500 hover:bg-amber-400/10 hover:text-amber-400"}`}>
+    <FaFire /></button>
+  <button onClick={() => setDeleteConfirmId(property.id)} title="Delete"
+    className="flex items-center justify-center w-8 h-8 bg-white/5 hover:bg-red-500/20 text-gray-400 hover:text-red-400 rounded-lg transition text-xs ml-auto"><FaTrash /></button>
+</div>
                         </div>
                       </div>
                     ))}

@@ -62,11 +62,12 @@ export async function POST(req: Request) {
 export async function PUT(req: Request) {
   try {
     const body = await req.json();
-    const {
-      id, propoyeId, projectName, projectArea, location, address,
-      floors, towers, possessionDate, configuration, pricingStartsFrom,
-      images, floorPlans, isTrending, description, builderName,
-    } = body;
+const {
+  id, propoyeId, projectName, projectArea, location, address,
+  floors, towers, possessionDate, configuration, pricingStartsFrom,
+  images, floorPlans, isTrending, description, builderName,
+  isReadyToMove, isUnderConstruction, isNewLaunch,
+} = body;
 
     const updated = await prisma.property.update({
       where: { id },
@@ -86,6 +87,9 @@ export async function PUT(req: Request) {
         ...(description        !== undefined && { description }),
         ...(builderName        !== undefined && { builderName }),
         ...(typeof isTrending === "boolean"  && { isTrending }),
+        ...(typeof isReadyToMove === "boolean" && { isReadyToMove }),
+...(typeof isUnderConstruction === "boolean" && { isUnderConstruction }),
+...(typeof isNewLaunch === "boolean" && { isNewLaunch }),
       },
     });
 

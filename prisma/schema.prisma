@@ -8,23 +8,26 @@ datasource db {
 }
 
 model Property {
-  id                String   @id @default(cuid())
-  propoyeId         String   @unique
-  projectName       String
-  projectArea       String
-  location          String
-  address           String
-  floors            Int
-  towers            Int
-  possessionDate    String
-  configuration     String
-  pricingStartsFrom String
-  images            String[]
-  floorPlans        String[]
-  description       String   @default("")
-  builderName       String   @default("")
-  isTrending        Boolean  @default(false)
-  createdAt         DateTime @default(now())
+  id                  String   @id @default(cuid())
+  propoyeId           String   @unique
+  projectName         String
+  projectArea         String
+  location            String
+  address             String
+  floors              Int
+  towers              Int
+  possessionDate      String
+  configuration       String
+  pricingStartsFrom   String
+  images              String[]
+  floorPlans          String[]
+  description         String   @default("")
+  builderName         String   @default("")
+  isTrending          Boolean  @default(false)
+  isReadyToMove       Boolean  @default(false)
+  isUnderConstruction Boolean  @default(false)
+  isNewLaunch         Boolean  @default(false)
+  createdAt           DateTime @default(now())
 }
 
 model Setting {
