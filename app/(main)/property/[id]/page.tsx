@@ -108,7 +108,7 @@ export default async function PropertyDetails({ params }: PropertyPageProps) {
                   </span>
                 )}
                 <span className="inline-flex items-center gap-1.5 bg-white/5 border border-white/10 text-gray-400 text-xs font-mono px-3 py-1.5 rounded-full">
-                  ID: {property.propoyeId}
+                  Rera No.: {property.propoyeId}
                 </span>
               </div>
 

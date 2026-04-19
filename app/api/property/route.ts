@@ -36,7 +36,7 @@ export async function POST(req: Request) {
     const {
       propoyeId, projectName, projectArea, location, address,
       floors, towers, possessionDate, configuration, pricingStartsFrom,
-      images, floorPlans, description,
+      images, floorPlans, description, builderName,
     } = body;
 
     const property = await prisma.property.create({
@@ -47,6 +47,7 @@ export async function POST(req: Request) {
         images:      images      ?? [],
         floorPlans:  floorPlans  ?? [],
         description: description ?? "",
+        builderName: builderName ?? "",
       },
     });
 
@@ -64,7 +65,7 @@ export async function PUT(req: Request) {
     const {
       id, propoyeId, projectName, projectArea, location, address,
       floors, towers, possessionDate, configuration, pricingStartsFrom,
-      images, floorPlans, isTrending, description,
+      images, floorPlans, isTrending, description, builderName,
     } = body;
 
     const updated = await prisma.property.update({
@@ -83,6 +84,7 @@ export async function PUT(req: Request) {
         ...(images             !== undefined && { images }),
         ...(floorPlans         !== undefined && { floorPlans }),
         ...(description        !== undefined && { description }),
+        ...(builderName        !== undefined && { builderName }),
         ...(typeof isTrending === "boolean"  && { isTrending }),
       },
     });
