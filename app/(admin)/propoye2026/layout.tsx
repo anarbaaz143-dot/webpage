@@ -28,6 +28,7 @@ type Property = {
   floorPlans: string[];
   isTrending: boolean;
   description?: string;
+  builderName?: string;  // ← add this
 };
 
 type Toast = { id: number; message: string; type: "success" | "error" };
@@ -286,6 +287,7 @@ export default function AdminLayout() {
   const [descriptionModalProperty, setDescriptionModalProperty] = useState<Property | null>(null);
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [builderName, setBuilderName] = useState("");
 
   // ── YouTube state (3 videos) ──────────────────────────────
   const [youtubeUrls, setYoutubeUrls] = useState<Record<1 | 2 | 3, string>>({ 1: "", 2: "", 3: "" });
@@ -404,14 +406,15 @@ export default function AdminLayout() {
     return Object.keys(errors).length === 0;
   };
 
-  const resetForm = () => {
-    setPropoyeId(""); setProjectName(""); setProjectArea("");
-    setLocation(""); setAddress(""); setFloors(""); setTowers("");
-    setPossessionDate(""); setConfiguration(""); setPricingStartsFrom("");
-    setImages([]); setImagePreviewUrls([]);
-    setFloorPlanFiles([]); setFloorPlanPreviewUrls([]);
-    setEditingId(null); setFormErrors({});
-  };
+const resetForm = () => {
+  setPropoyeId(""); setProjectName(""); setProjectArea("");
+  setLocation(""); setAddress(""); setFloors(""); setTowers("");
+  setPossessionDate(""); setConfiguration(""); setPricingStartsFrom("");
+  setBuilderName(""); // ← add this
+  setImages([]); setImagePreviewUrls([]);
+  setFloorPlanFiles([]); setFloorPlanPreviewUrls([]);
+  setEditingId(null); setFormErrors({});
+};
 
   const uploadFiles = async (files: File[]): Promise<string[]> => {
     if (files.length === 0) return [];
@@ -436,6 +439,7 @@ export default function AdminLayout() {
         propoyeId, projectName, projectArea, location, address,
         floors: Number(floors), towers: Number(towers),
         possessionDate, configuration, pricingStartsFrom,
+        builderName,
         ...(uploadedImages.length > 0 && { images: uploadedImages }),
         ...(uploadedFloorPlans.length > 0 && { floorPlans: uploadedFloorPlans }),
       };
@@ -497,6 +501,7 @@ export default function AdminLayout() {
     setImages([]); setImagePreviewUrls(p.images || []);
     setFloorPlanFiles([]); setFloorPlanPreviewUrls(p.floorPlans || []);
     setFormErrors({});
+    setBuilderName(p.builderName || "");
     setView("add");
   };
 
@@ -692,6 +697,20 @@ export default function AdminLayout() {
                     <div className="mt-4">
                       <Field label="Pricing Starts From" placeholder="e.g. ₹1.2 Cr" value={pricingStartsFrom} onChange={mkChange(setPricingStartsFrom, "pricingStartsFrom")} error={formErrors.pricingStartsFrom} />
                     </div>
+
+
+                    <div className="mt-4">
+  <Field label="Pricing Starts From" placeholder="e.g. ₹1.2 Cr" value={pricingStartsFrom} onChange={mkChange(setPricingStartsFrom, "pricingStartsFrom")} error={formErrors.pricingStartsFrom} />
+</div>
+<div className="mt-4">
+  <Field 
+    label="Builder Name" 
+    placeholder="e.g. Lodha Group" 
+    value={builderName} 
+    onChange={mkChange(setBuilderName, "builderName")}
+    optional={true}
+  />
+</div>
                   </div>
                   <div className="h-px bg-white/5" />
                   <div>
