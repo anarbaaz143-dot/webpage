@@ -57,7 +57,6 @@ export default async function PropertyDetails({ params }: PropertyPageProps) {
     { label: "Pricing From",  value: property.pricingStartsFrom, highlight: true },
   ];
 
-  const featureTags = ["Prime Location", "Ready to Move", "Verified Listing"];
 
   return (
     <div className="min-h-screen bg-gray-950 text-white">
@@ -100,17 +99,32 @@ export default async function PropertyDetails({ params }: PropertyPageProps) {
             {/* ── Left column: property details ── */}
             <div className="md:col-span-2 space-y-7">
 
-              {/* Badges */}
-              <div className="flex items-center gap-3 flex-wrap">
-                {property.isTrending && (
-                  <span className="inline-flex items-center gap-1.5 bg-amber-400/10 border border-amber-400/30 text-amber-400 text-xs font-bold px-3 py-1.5 rounded-full">
-                    🔥 Trending Property
-                  </span>
-                )}
-                <span className="inline-flex items-center gap-1.5 bg-white/5 border border-white/10 text-gray-400 text-xs font-mono px-3 py-1.5 rounded-full">
-                  Rera No.: {property.propoyeId}
-                </span>
-              </div>
+{/* Badges */}
+<div className="flex items-center gap-3 flex-wrap">
+  {property.isTrending && (
+    <span className="inline-flex items-center gap-1.5 bg-amber-400/10 border border-amber-400/30 text-amber-400 text-xs font-bold px-3 py-1.5 rounded-full">
+      🔥 Trending Property
+    </span>
+  )}
+  {property.isReadyToMove && (
+    <span className="inline-flex items-center gap-1.5 bg-green-500/10 border border-green-500/30 text-green-400 text-xs font-bold px-3 py-1.5 rounded-full">
+      ✓ Ready to Move
+    </span>
+  )}
+  {property.isUnderConstruction && (
+    <span className="inline-flex items-center gap-1.5 bg-orange-500/10 border border-orange-500/30 text-orange-400 text-xs font-bold px-3 py-1.5 rounded-full">
+      🏗 Under Construction
+    </span>
+  )}
+  {property.isNewLaunch && (
+    <span className="inline-flex items-center gap-1.5 bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-bold px-3 py-1.5 rounded-full">
+      🚀 New Launch
+    </span>
+  )}
+  <span className="inline-flex items-center gap-1.5 bg-white/5 border border-white/10 text-gray-400 text-xs font-mono px-3 py-1.5 rounded-full">
+    Rera No.: {property.propoyeId}
+  </span>
+</div>
 
               {/* Title + location */}
               <div className="space-y-1">
@@ -161,18 +175,6 @@ export default async function PropertyDetails({ params }: PropertyPageProps) {
   </div>
 )}
 
-
-              {/* Feature tags */}
-              <div className="flex flex-wrap gap-2">
-                {featureTags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="text-xs font-semibold bg-white/5 border border-white/10 text-gray-400 px-3 py-1.5 rounded-full"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
 
               {/* Floor Plans */}
               {property.floorPlans && property.floorPlans.length > 0 && (
