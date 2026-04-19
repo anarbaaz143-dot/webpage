@@ -11,7 +11,7 @@ export default function AdminLogin() {
   async function handleLogin() {
     setLoading(true);
     setError("");
-    const res = await fetch("/api/propoye-login", {
+    const res = await fetch("/api/propoye2026-login", {
       method: "POST",
       body: JSON.stringify({ password }),
       headers: { "Content-Type": "application/json" },
