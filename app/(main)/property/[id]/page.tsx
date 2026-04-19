@@ -152,6 +152,16 @@ export default async function PropertyDetails({ params }: PropertyPageProps) {
 
               <SectionDivider />
 
+
+
+              {property.builderName?.trim() && (
+  <div className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-2xl px-4 py-3">
+    <div className="text-[10px] font-bold tracking-widest uppercase text-gray-500">Builder</div>
+    <div className="text-sm font-bold text-white ml-auto">{property.builderName}</div>
+  </div>
+)}
+
+
               {/* Feature tags */}
               <div className="flex flex-wrap gap-2">
                 {featureTags.map((tag) => (
