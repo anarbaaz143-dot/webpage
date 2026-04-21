@@ -149,7 +149,7 @@ function PropertyCard({ property, now }: { property: any; now: Date }) {
 
 {property.isEarlypossesion && (
   <div className="inline-flex items-center gap-1 bg-blue-400 text-blue-900 text-[10px] font-extrabold px-2.5 py-1 rounded-full shadow">
-    🌏 Early Possesion
+    🌏 Early Possession
   </div>
 )}
         </div>
@@ -368,7 +368,7 @@ if (onlyEarlypossesion) list = list.filter((p) => p.isEarlypossesion);
     else if (sortKey === "price_desc") list.sort((a, b) => (parsePriceCr(b.pricingStartsFrom) ?? 0) - (parsePriceCr(a.pricingStartsFrom) ?? 0));
     else if (sortKey === "newest") list.sort((a, b) => new Date(b.createdAt ?? 0).getTime() - new Date(a.createdAt ?? 0).getTime());
     return list;
-  }, [allResults, activeBHK, activePriceIdx, onlyTrending, onlyReady, sortKey, now]);
+}, [allResults, activeBHK, activePriceIdx, onlyTrending, onlyReady, onlyUnderConstruction, onlyNewLaunch, onlyEarlypossesion, sortKey, now]);
 
   const filteredOut = allResults.length - results.length;
   const hasFilters = activeBHK || activePriceIdx !== null || onlyTrending || onlyReady || onlyUnderConstruction || onlyNewLaunch || onlyEarlypossesion;
@@ -377,7 +377,7 @@ const clearFilters = () => {
   setActiveBHK(null); setActivePriceIdx(null);
   setOnlyTrending(false); setOnlyReady(false);
   setOnlyUnderConstruction(false); setOnlyNewLaunch(false);
-  setOnlyEarlypossesion(false); setOnlyEarlypossesion(false);
+  setOnlyEarlypossesion(false); 
   setSortKey("relevance");
 };
 
@@ -484,7 +484,7 @@ const clearFilters = () => {
                 <Chip label="Ready to Move" active={onlyReady} onClick={() => setOnlyReady(!onlyReady)} icon="✓" />
 <Chip label="Under Construction" active={onlyUnderConstruction} onClick={() => setOnlyUnderConstruction(!onlyUnderConstruction)} icon="🏗" />
 <Chip label="New Launch" active={onlyNewLaunch} onClick={() => setOnlyNewLaunch(!onlyNewLaunch)} icon="🚀" />
-  <Chip label="Early possesion" active={onlyEarlypossesion} onClick={() => setOnlyEarlypossesion(!onlyEarlypossesion)} icon="🌏" />
+  <Chip label="Early possession" active={onlyEarlypossesion} onClick={() => setOnlyEarlypossesion(!onlyEarlypossesion)} icon="🌏" />
                 {hasFilters && (
                   <button onClick={clearFilters} className="ml-1 text-[10px] text-gray-600 hover:text-red-400 underline transition-colors font-medium">
                     Clear all
