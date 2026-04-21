@@ -24,6 +24,7 @@ type Property = {
   possessionDate: string;
   configuration: string;
   pricingStartsFrom: string;
+  pricingEndsAt?: string;
   images: string[];
   floorPlans: string[];
   isTrending: boolean;
@@ -290,7 +291,6 @@ export default function AdminLayout() {
   const [descriptionModalProperty, setDescriptionModalProperty] = useState<Property | null>(null);
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [builderName, setBuilderName] = useState("");
 
   // ── YouTube state (3 videos) ──────────────────────────────
   const [youtubeUrls, setYoutubeUrls] = useState<Record<1 | 2 | 3, string>>({ 1: "", 2: "", 3: "" });
@@ -308,6 +308,8 @@ export default function AdminLayout() {
   const [possessionDate, setPossessionDate] = useState("");
   const [configuration, setConfiguration] = useState("");
   const [pricingStartsFrom, setPricingStartsFrom] = useState("");
+  const [pricingEndsAt, setPricingEndsAt] = useState("");
+  const [builderName, setBuilderName] = useState("");
   const [images, setImages] = useState<File[]>([]);
   const [imagePreviewUrls, setImagePreviewUrls] = useState<string[]>([]);
   const [floorPlanFiles, setFloorPlanFiles] = useState<File[]>([]);
@@ -414,6 +416,7 @@ const resetForm = () => {
   setLocation(""); setAddress(""); setFloors(""); setTowers("");
   setPossessionDate(""); setConfiguration(""); setPricingStartsFrom("");
   setBuilderName(""); // ← add this
+  setPricingEndsAt("");
   setImages([]); setImagePreviewUrls([]);
   setFloorPlanFiles([]); setFloorPlanPreviewUrls([]);
   setEditingId(null); setFormErrors({});
@@ -442,7 +445,7 @@ const resetForm = () => {
         propoyeId, projectName, projectArea, location, address,
         floors: Number(floors), towers: Number(towers),
         possessionDate, configuration, pricingStartsFrom,
-        builderName,
+        builderName,pricingEndsAt,
         ...(uploadedImages.length > 0 && { images: uploadedImages }),
         ...(uploadedFloorPlans.length > 0 && { floorPlans: uploadedFloorPlans }),
       };
@@ -546,6 +549,7 @@ const toggleNewLaunch = async (property: Property) => {
     setFloors(String(p.floors)); setTowers(String(p.towers));
     setPossessionDate(p.possessionDate); setConfiguration(p.configuration);
     setPricingStartsFrom(p.pricingStartsFrom);
+    setPricingEndsAt(p.pricingEndsAt || "");
     setImages([]); setImagePreviewUrls(p.images || []);
     setFloorPlanFiles([]); setFloorPlanPreviewUrls(p.floorPlans || []);
     setFormErrors({});
@@ -745,6 +749,15 @@ const toggleNewLaunch = async (property: Property) => {
                     <div className="mt-4">
                       <Field label="Pricing Starts From" placeholder="e.g. ₹1.2 Cr" value={pricingStartsFrom} onChange={mkChange(setPricingStartsFrom, "pricingStartsFrom")} error={formErrors.pricingStartsFrom} />
                     </div>
+                    <div className="mt-4">
+  <Field
+    label="Pricing Ends At"
+    placeholder="e.g. ₹2.5 Cr"
+    value={pricingEndsAt}
+    onChange={mkChange(setPricingEndsAt, "pricingEndsAt")}
+    optional={true}
+  />
+</div>
 
 <div className="mt-4">
   <Field 

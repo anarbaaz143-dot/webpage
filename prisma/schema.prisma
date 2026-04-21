@@ -19,6 +19,7 @@ model Property {
   possessionDate      String
   configuration       String
   pricingStartsFrom   String
+  pricingEndsAt       String   @default("")
   images              String[]
   floorPlans          String[]
   description         String   @default("")

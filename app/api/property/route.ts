@@ -2,7 +2,6 @@ export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
-/* ================= GET ================= */
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const query = searchParams.get("search");
@@ -29,14 +28,13 @@ export async function GET(req: Request) {
   return NextResponse.json(properties);
 }
 
-/* ================= POST ================= */
 export async function POST(req: Request) {
   try {
     const body = await req.json();
     const {
       propoyeId, projectName, projectArea, location, address,
       floors, towers, possessionDate, configuration, pricingStartsFrom,
-      images, floorPlans, description, builderName,
+      pricingEndsAt, images, floorPlans, description, builderName,
     } = body;
 
     const property = await prisma.property.create({
@@ -44,6 +42,7 @@ export async function POST(req: Request) {
         propoyeId, projectName, projectArea, location, address,
         floors: Number(floors), towers: Number(towers),
         possessionDate, configuration, pricingStartsFrom,
+        pricingEndsAt: pricingEndsAt ?? "",
         images:      images      ?? [],
         floorPlans:  floorPlans  ?? [],
         description: description ?? "",
@@ -58,16 +57,15 @@ export async function POST(req: Request) {
   }
 }
 
-/* ================= PUT ================= */
 export async function PUT(req: Request) {
   try {
     const body = await req.json();
-const {
-  id, propoyeId, projectName, projectArea, location, address,
-  floors, towers, possessionDate, configuration, pricingStartsFrom,
-  images, floorPlans, isTrending, description, builderName,
-  isReadyToMove, isUnderConstruction, isNewLaunch,
-} = body;
+    const {
+      id, propoyeId, projectName, projectArea, location, address,
+      floors, towers, possessionDate, configuration, pricingStartsFrom,
+      pricingEndsAt, images, floorPlans, isTrending, description, builderName,
+      isReadyToMove, isUnderConstruction, isNewLaunch,
+    } = body;
 
     const updated = await prisma.property.update({
       where: { id },
@@ -82,14 +80,15 @@ const {
         ...(possessionDate     !== undefined && { possessionDate }),
         ...(configuration      !== undefined && { configuration }),
         ...(pricingStartsFrom  !== undefined && { pricingStartsFrom }),
+        ...(pricingEndsAt      !== undefined && { pricingEndsAt }),
         ...(images             !== undefined && { images }),
         ...(floorPlans         !== undefined && { floorPlans }),
         ...(description        !== undefined && { description }),
         ...(builderName        !== undefined && { builderName }),
-        ...(typeof isTrending === "boolean"  && { isTrending }),
-        ...(typeof isReadyToMove === "boolean" && { isReadyToMove }),
-...(typeof isUnderConstruction === "boolean" && { isUnderConstruction }),
-...(typeof isNewLaunch === "boolean" && { isNewLaunch }),
+        ...(typeof isTrending === "boolean"        && { isTrending }),
+        ...(typeof isReadyToMove === "boolean"     && { isReadyToMove }),
+        ...(typeof isUnderConstruction === "boolean" && { isUnderConstruction }),
+        ...(typeof isNewLaunch === "boolean"       && { isNewLaunch }),
       },
     });
 
@@ -100,7 +99,6 @@ const {
   }
 }
 
-/* ================= DELETE ================= */
 export async function DELETE(req: Request) {
   try {
     const { id } = await req.json();
