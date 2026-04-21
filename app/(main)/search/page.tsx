@@ -146,6 +146,12 @@ function PropertyCard({ property, now }: { property: any; now: Date }) {
     🚀 New Launch
   </div>
 )}
+
+{property.isEarlypossesion && (
+  <div className="inline-flex items-center gap-1 bg-blue-400 text-blue-900 text-[10px] font-extrabold px-2.5 py-1 rounded-full shadow">
+    🌏 Early Possesion
+  </div>
+)}
         </div>
 
         {/* Project area pill */}
@@ -306,6 +312,7 @@ useEffect(() => {
   const [onlyReady, setOnlyReady] = useState(false);
   const [onlyUnderConstruction, setOnlyUnderConstruction] = useState(false);
 const [onlyNewLaunch, setOnlyNewLaunch] = useState(false);
+const [onlyEarlypossesion, setOnlyEarlypossesion] = useState(false);
   const [sortKey, setSortKey] = useState<SortKey>("relevance");
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [showAllPrices, setShowAllPrices] = useState(false);
@@ -356,6 +363,7 @@ useEffect(() => {
     if (onlyReady) list = list.filter((p) => p.isReadyToMove);
 if (onlyUnderConstruction) list = list.filter((p) => p.isUnderConstruction);
 if (onlyNewLaunch) list = list.filter((p) => p.isNewLaunch);
+if (onlyEarlypossesion) list = list.filter((p) => p.isEarlypossesion);
     if (sortKey === "price_asc") list.sort((a, b) => (parsePriceCr(a.pricingStartsFrom) ?? 999) - (parsePriceCr(b.pricingStartsFrom) ?? 999));
     else if (sortKey === "price_desc") list.sort((a, b) => (parsePriceCr(b.pricingStartsFrom) ?? 0) - (parsePriceCr(a.pricingStartsFrom) ?? 0));
     else if (sortKey === "newest") list.sort((a, b) => new Date(b.createdAt ?? 0).getTime() - new Date(a.createdAt ?? 0).getTime());
@@ -363,12 +371,13 @@ if (onlyNewLaunch) list = list.filter((p) => p.isNewLaunch);
   }, [allResults, activeBHK, activePriceIdx, onlyTrending, onlyReady, sortKey, now]);
 
   const filteredOut = allResults.length - results.length;
-  const hasFilters = activeBHK || activePriceIdx !== null || onlyTrending || onlyReady || onlyUnderConstruction || onlyNewLaunch;
+  const hasFilters = activeBHK || activePriceIdx !== null || onlyTrending || onlyReady || onlyUnderConstruction || onlyNewLaunch || onlyEarlypossesion;
 
 const clearFilters = () => {
   setActiveBHK(null); setActivePriceIdx(null);
   setOnlyTrending(false); setOnlyReady(false);
   setOnlyUnderConstruction(false); setOnlyNewLaunch(false);
+  setOnlyEarlypossesion(false); setOnlyEarlypossesion(false);
   setSortKey("relevance");
 };
 
@@ -475,6 +484,7 @@ const clearFilters = () => {
                 <Chip label="Ready to Move" active={onlyReady} onClick={() => setOnlyReady(!onlyReady)} icon="✓" />
 <Chip label="Under Construction" active={onlyUnderConstruction} onClick={() => setOnlyUnderConstruction(!onlyUnderConstruction)} icon="🏗" />
 <Chip label="New Launch" active={onlyNewLaunch} onClick={() => setOnlyNewLaunch(!onlyNewLaunch)} icon="🚀" />
+  <Chip label="Early possesion" active={onlyEarlypossesion} onClick={() => setOnlyEarlypossesion(!onlyEarlypossesion)} icon="🌏" />
                 {hasFilters && (
                   <button onClick={clearFilters} className="ml-1 text-[10px] text-gray-600 hover:text-red-400 underline transition-colors font-medium">
                     Clear all

@@ -27,6 +27,7 @@ model Property {
   isTrending          Boolean  @default(false)
   isReadyToMove       Boolean  @default(false)
   isUnderConstruction Boolean  @default(false)
+  isEarlypossesion    Boolean  @default(false)
   isNewLaunch         Boolean  @default(false)
   createdAt           DateTime @default(now())
 }

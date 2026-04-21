@@ -64,7 +64,7 @@ export async function PUT(req: Request) {
       id, propoyeId, projectName, projectArea, location, address,
       floors, towers, possessionDate, configuration, pricingStartsFrom,
       pricingEndsAt, images, floorPlans, isTrending, description, builderName,
-      isReadyToMove, isUnderConstruction, isNewLaunch,
+      isReadyToMove, isUnderConstruction, isNewLaunch, isEarlypossesion,
     } = body;
 
     const updated = await prisma.property.update({
@@ -89,6 +89,7 @@ export async function PUT(req: Request) {
         ...(typeof isReadyToMove === "boolean"     && { isReadyToMove }),
         ...(typeof isUnderConstruction === "boolean" && { isUnderConstruction }),
         ...(typeof isNewLaunch === "boolean"       && { isNewLaunch }),
+        ...(typeof isEarlypossesion === "boolean"       && { isEarlypossesion }),
       },
     });
 

@@ -121,6 +121,11 @@ export default async function PropertyDetails({ params }: PropertyPageProps) {
       🚀 New Launch
     </span>
   )}
+    {property.isEarlypossesion && (
+    <span className="inline-flex items-center gap-1.5 bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-bold px-3 py-1.5 rounded-full">
+      🌏 Early Possesion
+    </span>
+  )}
   <span className="inline-flex items-center gap-1.5 bg-white/5 border border-white/10 text-gray-400 text-xs font-mono px-3 py-1.5 rounded-full">
     Rera No.: {property.propoyeId}
   </span>
@@ -246,7 +251,7 @@ export default async function PropertyDetails({ params }: PropertyPageProps) {
 
                   {/* WhatsApp CTA */}
                   <a
-                    href={`https://wa.me/919321759929?text=${whatsappMessage}`}
+                    href={`https://wa.me/919702162636?text=${whatsappMessage}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center gap-2 w-full bg-green-500 hover:bg-green-400 text-white font-bold py-3.5 rounded-2xl transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(34,197,94,0.3)] shadow-md text-sm"

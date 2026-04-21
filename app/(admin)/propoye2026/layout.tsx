@@ -30,6 +30,7 @@ type Property = {
   isTrending: boolean;
   isReadyToMove?: boolean;
   isUnderConstruction?: boolean;
+  isEarlypossesion?: boolean;
   isNewLaunch?: boolean;
   description?: string;
   builderName?: string;
@@ -542,6 +543,21 @@ const toggleNewLaunch = async (property: Property) => {
   }
 };
 
+const isEarlypossesion = async (property: Property) => {
+  try {
+    const res = await fetch("/api/property", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: property.id, isEarlypossesion: !property.isEarlypossesion }),
+    });
+    if (!res.ok) throw new Error();
+    showToast(property.isEarlypossesion ? "Removed Early possesion" : "Marked as Early Possesion");
+    fetchProperties();
+  } catch {
+    showToast("Failed to update", "error");
+  }
+};
+
   const handleEdit = (p: Property) => {
     setEditingId(p.id);
     setPropoyeId(p.propoyeId); setProjectName(p.projectName); setProjectArea(p.projectArea);
@@ -857,6 +873,9 @@ const toggleNewLaunch = async (property: Property) => {
   <button onClick={() => toggleNewLaunch(property)} title={property.isNewLaunch ? "Remove New Launch" : "Mark New Launch"}
     className={`flex items-center justify-center w-8 h-8 rounded-lg transition text-xs ${property.isNewLaunch ? "bg-blue-500/20 text-blue-400 hover:bg-blue-500/30" : "bg-white/5 text-gray-500 hover:bg-blue-500/10 hover:text-blue-400"}`}>
     🚀</button>
+      <button onClick={() => isEarlypossesion(property)} title={property.isEarlypossesion ? "Remove Early possesion" : "Mark Early possesion"}
+    className={`flex items-center justify-center w-8 h-8 rounded-lg transition text-xs ${property.isEarlypossesion ? "bg-blue-500/20 text-blue-400 hover:bg-blue-500/30" : "bg-white/5 text-gray-500 hover:bg-blue-500/10 hover:text-blue-400"}`}>
+    🌏</button>
   <button onClick={() => toggleTrending(property)} title={property.isTrending ? "Remove from trending" : "Add to trending"}
     className={`flex items-center justify-center w-8 h-8 rounded-lg transition text-xs ${property.isTrending ? "bg-amber-400/20 text-amber-400 hover:bg-amber-400/30" : "bg-white/5 text-gray-500 hover:bg-amber-400/10 hover:text-amber-400"}`}>
     <FaFire /></button>
