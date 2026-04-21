@@ -685,19 +685,38 @@ const isEarlypossesion = async (property: Property) => {
                   <h2 className="text-3xl font-extrabold mb-1">Welcome back 👋</h2>
                   <p className="text-gray-500 text-sm">Here's a quick overview of your listings.</p>
                 </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {[
-                    { label: "Total Properties", value: properties.length, color: "border-blue-500/30 bg-blue-500/5" },
-                    { label: "Trending", value: trendingCount, color: "border-amber-400/30 bg-amber-400/5" },
-                    { label: "Non-Trending", value: properties.length - trendingCount, color: "border-gray-500/30 bg-white/5" },
-                    { label: "Avg Floors", value: properties.length ? Math.round(properties.reduce((a, p) => a + p.floors, 0) / properties.length) : 0, color: "border-green-500/30 bg-green-500/5" },
-                  ].map((s) => (
-                    <div key={s.label} className={`border ${s.color} rounded-2xl p-5`}>
-                      <div className="text-3xl font-extrabold text-white mb-1">{s.value}</div>
-                      <div className="text-xs text-gray-500 font-medium">{s.label}</div>
-                    </div>
-                  ))}
-                </div>
+{/* Row 1 — Status counts */}
+<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+  {[
+    { label: "Total",             value: properties.length,                                          color: "border-blue-500/30 bg-blue-500/5",   text: "text-white" },
+    { label: "Trending",          value: properties.filter(p => p.isTrending).length,                color: "border-amber-400/30 bg-amber-400/5", text: "text-amber-400" },
+    { label: "Ready to Move",     value: properties.filter(p => p.isReadyToMove).length,             color: "border-green-500/30 bg-green-500/5", text: "text-green-400" },
+    { label: "Under Construction",value: properties.filter(p => p.isUnderConstruction).length,       color: "border-orange-500/30 bg-orange-500/5",text: "text-orange-400" },
+    { label: "New Launch",        value: properties.filter(p => p.isNewLaunch).length,               color: "border-blue-400/30 bg-blue-400/5",   text: "text-blue-400" },
+    { label: "Early Possession",  value: properties.filter(p => p.isEarlypossesion).length,          color: "border-purple-500/30 bg-purple-500/5",text: "text-purple-400" },
+  ].map((s) => (
+    <div key={s.label} className={`border ${s.color} rounded-2xl p-5`}>
+      <div className={`text-3xl font-extrabold mb-1 ${s.text}`}>{s.value}</div>
+      <div className="text-xs text-gray-500 font-medium">{s.label}</div>
+    </div>
+  ))}
+</div>
+
+{/* Row 2 — Completeness stats */}
+<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+  {[
+    { label: "Avg Floors",         value: properties.length ? Math.round(properties.reduce((a, p) => a + p.floors, 0) / properties.length) : 0, sub: "across all projects" },
+    { label: "With Descriptions",  value: `${properties.filter(p => p.description?.trim()).length} / ${properties.length}`, sub: `${properties.filter(p => !p.description?.trim()).length} missing` },
+    { label: "With Floor Plans",   value: `${properties.filter(p => p.floorPlans?.length > 0).length} / ${properties.length}`, sub: `${properties.filter(p => !p.floorPlans?.length).length} missing` },
+    { label: "With Builder Name",  value: `${properties.filter(p => p.builderName?.trim()).length} / ${properties.length}`, sub: `${properties.filter(p => !p.builderName?.trim()).length} missing` },
+  ].map((s) => (
+    <div key={s.label} className="border border-white/5 bg-white/5 rounded-2xl p-5">
+      <div className="text-2xl font-extrabold text-white mb-1">{s.value}</div>
+      <div className="text-xs text-gray-500 font-medium">{s.label}</div>
+      <div className="text-[10px] text-gray-600 mt-1">{s.sub}</div>
+    </div>
+  ))}
+</div>
                 <div>
                   <h3 className="text-sm font-bold text-gray-400 tracking-widest uppercase mb-4">Recent Properties</h3>
                   {loading ? <p className="text-gray-600 text-sm">Loading…</p> : (
