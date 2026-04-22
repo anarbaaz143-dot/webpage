@@ -75,7 +75,7 @@ export default async function TrendingPage() {
               {trendingHomes.map((home: (typeof trendingHomes)[0], index: number) => (
                 <Link
                   key={home.id}
-                  href={`/property/${home.id}`}
+                  href={`/property/${home.slug || home.id}`}
                   className="group bg-white border border-gray-100 rounded-3xl overflow-hidden hover:border-amber-200 hover:shadow-[0_20px_60px_rgba(0,0,0,0.1)] transition-all duration-500 hover:-translate-y-2 relative"
                 >
                   {/* Image */}
@@ -96,7 +96,6 @@ export default async function TrendingPage() {
 
                   {/* Content */}
                   <div className="p-6">
-                    {/* ✅ projectName */}
                     <h2
                       className="text-lg font-extrabold mb-2 text-gray-900 group-hover:text-amber-500 transition-colors duration-300 leading-snug"
                       style={{ fontFamily: "'Playfair Display', serif" }}
@@ -104,7 +103,6 @@ export default async function TrendingPage() {
                       {home.projectName}
                     </h2>
 
-                    {/* ✅ location */}
                     <div className="flex items-center gap-1.5 text-gray-400 text-sm mb-2">
                       <svg className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
@@ -112,12 +110,10 @@ export default async function TrendingPage() {
                       {home.location}
                     </div>
 
-                    {/* ✅ pricingStartsFrom */}
                     {home.pricingStartsFrom && (
                       <div className="text-amber-500 text-sm font-bold mb-3">{home.pricingStartsFrom}</div>
                     )}
 
-                    {/* ✅ configuration + possessionDate pills */}
                     <div className="flex flex-wrap gap-1.5 mb-4">
                       {home.configuration && (
                         <span className="text-[11px] bg-gray-50 border border-gray-100 text-gray-500 px-2.5 py-1 rounded-full">

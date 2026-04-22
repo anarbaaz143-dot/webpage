@@ -245,7 +245,7 @@ export default function Home() {
             </button>
           </div>
  
-          {/* Quick suggestion chips — shown when search box is empty */}
+          {/* Quick suggestion chips */}
           {!searchTerm && (
             <div className="mt-6">
               <p className="text-xs text-gray-400 mb-3 font-medium">Quick searches</p>
@@ -287,7 +287,7 @@ export default function Home() {
                       {results.slice(groupIndex * 5, groupIndex * 5 + 5).map((property) => (
                         <div
                           key={property.id}
-                          onClick={() => (window.location.href = `/property/${property.id}`)}
+                          onClick={() => (window.location.href = `/property/${property.slug || property.id}`)}
                           className="p-4 bg-gray-50 border border-gray-100 rounded-2xl hover:border-amber-300 hover:shadow-lg hover:-translate-y-1 transition-all cursor-pointer group"
                         >
                           <div className="flex items-start gap-2 mb-1">
@@ -357,7 +357,7 @@ export default function Home() {
                 const isPrev = index === (trendingIndex - 1 + trendingHomes.length) % trendingHomes.length;
                 const isNext = index === (trendingIndex + 1) % trendingHomes.length;
                 return (
-                  <div key={home.id} onClick={() => (window.location.href = `/property/${home.id}`)}
+                  <div key={home.id} onClick={() => (window.location.href = `/property/${home.slug || home.id}`)}
                     className={`absolute transition-all duration-700 ease-in-out cursor-pointer ${isActive ? "scale-100 opacity-100 z-20" : isPrev || isNext ? "scale-90 opacity-40 z-10" : "scale-75 opacity-0 z-0"}`}
                     style={{ transform: `translateX(${isActive ? 0 : isPrev ? -220 : isNext ? 220 : 0}px) scale(${isActive ? 1 : isPrev || isNext ? 0.9 : 0.75})` }}
                   >
