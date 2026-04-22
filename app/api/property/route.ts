@@ -40,7 +40,7 @@ export async function POST(req: Request) {
     const property = await prisma.property.create({
       data: {
         propoyeId, projectName, projectArea, location, address,
-        floors: Number(floors), towers: Number(towers),
+        floors: floors, towers: towers,
         possessionDate, configuration, pricingStartsFrom,
         pricingEndsAt: pricingEndsAt ?? "",
         images:      images      ?? [],
