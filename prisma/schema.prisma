@@ -30,6 +30,7 @@ model Property {
   isEarlypossesion    Boolean  @default(false)
   isNewLaunch         Boolean  @default(false)
   createdAt           DateTime @default(now())
+  slug String @default("")
 }
 
 model Setting {

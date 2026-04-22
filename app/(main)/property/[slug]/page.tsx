@@ -5,7 +5,7 @@ import BrochureButton from "./BrochureButton";
 
 // ── Types ────────────────────────────────────────────────────
 interface PropertyPageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slug: string }>;
 }
 
 // ── Shared sub-components ─────────────────────────────────────
@@ -38,10 +38,17 @@ function WhatsAppIcon({ className }: { className?: string }) {
 
 // ── Page ─────────────────────────────────────────────────────
 export default async function PropertyDetails({ params }: PropertyPageProps) {
-  const { id } = await params;
-  if (!id) notFound();
+  const { slug } = await params;
+  if (!slug) notFound();
 
-  const property = await prisma.property.findUnique({ where: { id } });
+  const property = await prisma.property.findFirst({
+    where: {
+      OR: [
+        { slug },
+        { id: slug }, // fallback for old links
+      ],
+    },
+  });
   if (!property) notFound();
 
   const whatsappMessage = encodeURIComponent(

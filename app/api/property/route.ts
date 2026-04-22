@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { slugify } from "@/lib/utils";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -37,6 +38,8 @@ export async function POST(req: Request) {
       pricingEndsAt, images, floorPlans, description, builderName,
     } = body;
 
+    const slug = `${projectName.toLowerCase().replace(/[^a-z0-9\s]/g, "").trim().replace(/\s+/g, "-")}-${propoyeId.toLowerCase()}`;
+
     const property = await prisma.property.create({
       data: {
         propoyeId, projectName, projectArea, location, address,
@@ -47,6 +50,7 @@ export async function POST(req: Request) {
         floorPlans:  floorPlans  ?? [],
         description: description ?? "",
         builderName: builderName ?? "",
+        slug,
       },
     });
 
