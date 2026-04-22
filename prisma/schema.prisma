@@ -14,8 +14,8 @@ model Property {
   projectArea         String
   location            String
   address             String
-  floors              Int
-  towers              Int
+  floors              String
+  towers              String
   possessionDate      String
   configuration       String
   pricingStartsFrom   String
