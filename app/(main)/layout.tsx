@@ -55,8 +55,8 @@ export default function MainLayout({
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group cursor-pointer flex-shrink-0">
             <img
-              src="public/propoye.png"
-              alt="Propoye: Where Property Meets Simplicity"
+              src="/nobglogo.png"
+              alt="PROPOYE"
               className="h-20 md:h-30 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
             />
           </Link>
