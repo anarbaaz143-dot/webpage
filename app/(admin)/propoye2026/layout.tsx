@@ -402,8 +402,8 @@ export default function AdminLayout() {
     if (!projectArea.trim()) errors.projectArea = "Project area is required";
     if (!location.trim()) errors.location = "Location is required";
     if (!address.trim()) errors.address = "Address is required";
-    if (!floors || isNaN(Number(floors))) errors.floors = "Valid number required";
-    if (!towers || isNaN(Number(towers))) errors.towers = "Valid number required";
+if (!floors.trim()) errors.floors = "Floors is required";
+if (!towers.trim()) errors.towers = "Towers is required";
     if (!possessionDate.trim()) errors.possessionDate = "Possession date is required";
     if (!configuration.trim()) errors.configuration = "Configuration is required";
     if (!pricingStartsFrom.trim()) errors.pricingStartsFrom = "Pricing is required";
@@ -444,7 +444,7 @@ const resetForm = () => {
       const uploadedFloorPlans = await uploadFiles(floorPlanFiles);
       const body: any = {
         propoyeId, projectName, projectArea, location, address,
-        floors: Number(floors), towers: Number(towers),
+        floors: floors, towers: towers,
         possessionDate, configuration, pricingStartsFrom,
         builderName,pricingEndsAt,
         ...(uploadedImages.length > 0 && { images: uploadedImages }),
@@ -562,7 +562,8 @@ const isEarlypossesion = async (property: Property) => {
     setEditingId(p.id);
     setPropoyeId(p.propoyeId); setProjectName(p.projectName); setProjectArea(p.projectArea);
     setLocation(p.location); setAddress(p.address);
-    setFloors(String(p.floors)); setTowers(String(p.towers));
+    setFloors(String(p.floors));
+setTowers(String(p.towers));
     setPossessionDate(p.possessionDate); setConfiguration(p.configuration);
     setPricingStartsFrom(p.pricingStartsFrom);
     setPricingEndsAt(p.pricingEndsAt || "");
@@ -776,8 +777,8 @@ const isEarlypossesion = async (property: Property) => {
                   <div>
                     <p className="text-xs font-bold text-amber-400 tracking-widest uppercase mb-4 flex items-center gap-2"><span className="w-4 h-px bg-amber-400/50" /> Project Details</p>
                     <div className="grid md:grid-cols-2 gap-4">
-                      <Field label="Floors" placeholder="e.g. 24" value={floors} onChange={mkChange(setFloors, "floors")} error={formErrors.floors} type="number" />
-                      <Field label="Towers" placeholder="e.g. 3" value={towers} onChange={mkChange(setTowers, "towers")} error={formErrors.towers} type="number" />
+<Field label="Floors" placeholder="e.g. 24 or G+24" value={floors} onChange={mkChange(setFloors, "floors")} error={formErrors.floors} />
+<Field label="Towers" placeholder="e.g. 3" value={towers} onChange={mkChange(setTowers, "towers")} error={formErrors.towers} />
                       <Field label="Possession Date" placeholder="e.g. Dec 2026" value={possessionDate} onChange={mkChange(setPossessionDate, "possessionDate")} error={formErrors.possessionDate} />
                       <Field label="Configuration" placeholder="e.g. 2BHK, 3BHK" value={configuration} onChange={mkChange(setConfiguration, "configuration")} error={formErrors.configuration} />
                     </div>
