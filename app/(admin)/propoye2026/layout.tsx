@@ -19,8 +19,8 @@ type Property = {
   projectArea: string;
   location: string;
   address: string;
-  floors: number;
-  towers: number;
+  floors: string;
+  towers: string;
   possessionDate: string;
   configuration: string;
   pricingStartsFrom: string;
@@ -706,7 +706,7 @@ setTowers(String(p.towers));
 {/* Row 2 — Completeness stats */}
 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
   {[
-    { label: "Avg Floors",         value: properties.length ? Math.round(properties.reduce((a, p) => a + p.floors, 0) / properties.length) : 0, sub: "across all projects" },
+    { label: "Avg Floors", value: properties.length ? Math.round(properties.reduce((a, p) => a + (parseInt(p.floors) || 0), 0) / properties.length) : 0, sub: "across all projects" },
     { label: "With Descriptions",  value: `${properties.filter(p => p.description?.trim()).length} / ${properties.length}`, sub: `${properties.filter(p => !p.description?.trim()).length} missing` },
     { label: "With Floor Plans",   value: `${properties.filter(p => p.floorPlans?.length > 0).length} / ${properties.length}`, sub: `${properties.filter(p => !p.floorPlans?.length).length} missing` },
     { label: "With Builder Name",  value: `${properties.filter(p => p.builderName?.trim()).length} / ${properties.length}`, sub: `${properties.filter(p => !p.builderName?.trim()).length} missing` },
