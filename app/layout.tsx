@@ -1,5 +1,13 @@
 import "./globals.css";
 
+export const metadata = {
+  title: "Propoye",
+  description: "India’s trusted real estate platform",
+  icons: {
+    icon: "/favicon2.ico",
+  },
+};
+
 export default function RootLayout({
   children,
 }: {
