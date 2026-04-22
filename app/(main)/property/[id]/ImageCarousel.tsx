@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
-// ── Types ────────────────────────────────────────────────────
 interface ImageCarouselProps {
   images: string[];
 }
@@ -16,8 +15,27 @@ interface LightboxProps {
   setIndex: (i: number) => void;
 }
 
-// ── Shared helpers ───────────────────────────────────────────
 const wrap = (val: number, max: number) => (val + max) % max;
+
+function useSwipe(onLeft: () => void, onRight: () => void) {
+  const startX = useRef<number | null>(null);
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    startX.current = e.touches[0].clientX;
+  };
+
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (startX.current === null) return;
+    const diff = startX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) onLeft();
+      else onRight();
+    }
+    startX.current = null;
+  };
+
+  return { onTouchStart, onTouchEnd };
+}
 
 function NavArrow({
   direction,
@@ -28,15 +46,13 @@ function NavArrow({
   onClick: (e: React.MouseEvent) => void;
   size?: "md" | "lg";
 }) {
-  const sizeClass = size === "lg"
-    ? "w-14 h-14 text-2xl"
-    : "w-11 h-11 text-xl";
+  const sizeClass = size === "lg" ? "w-14 h-14 text-2xl" : "w-11 h-11 text-xl";
   const posClass = direction === "prev" ? "left-4" : "right-4";
 
   return (
     <button
       onClick={(e) => { e.stopPropagation(); onClick(e); }}
-      className={`absolute ${posClass} top-1/2 -translate-y-1/2 ${sizeClass} flex items-center justify-center bg-black/40 backdrop-blur-md hover:bg-amber-400 hover:text-gray-900 text-white rounded-full border border-white/20 transition-all duration-300 font-bold hover:scale-110`}
+      className={`absolute ${posClass} top-1/2 -translate-y-1/2 ${sizeClass} hidden md:flex items-center justify-center bg-black/40 backdrop-blur-md hover:bg-amber-400 hover:text-gray-900 text-white rounded-full border border-white/20 transition-all duration-300 font-bold hover:scale-110`}
     >
       {direction === "prev" ? "‹" : "›"}
     </button>
@@ -54,9 +70,7 @@ function ThumbnailStrip({
   onSelect: (i: number) => void;
   size?: "md" | "sm";
 }) {
-  const thumbClass = size === "sm"
-    ? "w-14 h-10"
-    : "w-20 h-16";
+  const thumbClass = size === "sm" ? "w-14 h-10" : "w-20 h-16";
 
   return (
     <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide px-2">
@@ -64,7 +78,7 @@ function ThumbnailStrip({
         <button
           key={i}
           onClick={(e) => { e.stopPropagation(); onSelect(i); }}
-          className={`flex-shrink-0 ${thumbClass} rounded-${size === "sm" ? "lg" : "xl"} overflow-hidden border-2 transition-all duration-300 ${
+          className={`flex-shrink-0 ${thumbClass} rounded-xl overflow-hidden border-2 transition-all duration-300 ${
             i === activeIndex
               ? "border-amber-400 scale-105 shadow-[0_0_12px_rgba(251,191,36,0.5)]"
               : "border-transparent opacity-50 hover:opacity-80"
@@ -77,8 +91,9 @@ function ThumbnailStrip({
   );
 }
 
-// ── Lightbox ─────────────────────────────────────────────────
 function Lightbox({ images, index, onClose, onPrev, onNext, setIndex }: LightboxProps) {
+  const swipe = useSwipe(onNext, onPrev);
+
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -87,8 +102,15 @@ function Lightbox({ images, index, onClose, onPrev, onNext, setIndex }: Lightbox
     };
     window.addEventListener("keydown", handleKey);
     document.body.style.overflow = "hidden";
+
+    // Push a history state so mobile back button closes lightbox
+    window.history.pushState({ lightbox: true }, "");
+    const handlePopState = () => onClose();
+    window.addEventListener("popstate", handlePopState);
+
     return () => {
       window.removeEventListener("keydown", handleKey);
+      window.removeEventListener("popstate", handlePopState);
       document.body.style.overflow = "";
     };
   }, [onClose, onPrev, onNext]);
@@ -97,23 +119,37 @@ function Lightbox({ images, index, onClose, onPrev, onNext, setIndex }: Lightbox
     <div
       className="fixed inset-0 z-[999] flex flex-col items-center justify-center"
       style={{ background: "rgba(0,0,0,0.95)" }}
+      {...swipe}
     >
-      {/* Backdrop click */}
       <div className="absolute inset-0" onClick={onClose} />
 
-      {/* Top bar: counter + close */}
-      <div className="absolute top-5 left-0 right-0 z-10 flex items-center justify-center px-5">
-        <div className="bg-white/10 backdrop-blur-md text-white text-xs font-semibold px-4 py-1.5 rounded-full border border-white/20">
-          {index + 1} / {images.length}
-        </div>
+      {/* Top bar */}
+      <div className="absolute top-5 left-0 right-0 z-10 flex items-center justify-between px-5">
+        {/* Mobile back button */}
         <button
           onClick={onClose}
-          className="absolute right-5 w-11 h-11 flex items-center justify-center bg-white/10 hover:bg-white/20 text-white rounded-full border border-white/20 transition-all duration-200 hover:scale-110 text-lg"
+          className="flex items-center gap-2 md:hidden bg-white/10 hover:bg-white/20 text-white text-sm font-semibold px-4 py-2 rounded-full border border-white/20 transition-all"
+        >
+          ← Back
+        </button>
+
+        {/* Counter */}
+        <div className="bg-white/10 backdrop-blur-md text-white text-xs font-semibold px-4 py-1.5 rounded-full border border-white/20 mx-auto md:mx-0">
+          {index + 1} / {images.length}
+        </div>
+
+        {/* Desktop close */}
+        <button
+          onClick={onClose}
+          className="hidden md:flex w-11 h-11 items-center justify-center bg-white/10 hover:bg-white/20 text-white rounded-full border border-white/20 transition-all duration-200 hover:scale-110 text-lg"
         >✕</button>
       </div>
 
-      {/* Main image */}
-      <div className="relative z-10 flex items-center justify-center w-full h-full px-20 py-16">
+      {/* Main image with swipe */}
+      <div
+        className="relative z-10 flex items-center justify-center w-full h-full px-4 md:px-20 py-16"
+        {...swipe}
+      >
         <img
           key={index}
           src={images[index]}
@@ -124,12 +160,21 @@ function Lightbox({ images, index, onClose, onPrev, onNext, setIndex }: Lightbox
         />
       </div>
 
-      {/* Nav arrows */}
+      {/* Nav arrows — desktop only */}
       {images.length > 1 && (
         <>
           <NavArrow direction="prev" size="lg" onClick={() => onPrev()} />
           <NavArrow direction="next" size="lg" onClick={() => onNext()} />
         </>
+      )}
+
+      {/* Swipe hint — mobile only */}
+      {images.length > 1 && (
+        <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-10 md:hidden">
+          <div className="text-white/40 text-xs font-medium px-3 py-1 rounded-full border border-white/10">
+            ← swipe →
+          </div>
+        </div>
       )}
 
       {/* Thumbnail strip */}
@@ -149,11 +194,15 @@ function Lightbox({ images, index, onClose, onPrev, onNext, setIndex }: Lightbox
   );
 }
 
-// ── Main Carousel ─────────────────────────────────────────────
 export default function ImageCarousel({ images }: ImageCarouselProps) {
   const [current, setCurrent] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
+
+  const swipe = useSwipe(
+    () => setCurrent((c) => wrap(c + 1, images.length)),
+    () => setCurrent((c) => wrap(c - 1, images.length))
+  );
 
   if (!images || images.length === 0) return null;
 
@@ -170,13 +219,11 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
 
   return (
     <>
-      {/* ── Carousel ── */}
       <div className="relative mb-12">
-
-        {/* Main image */}
         <div
           className="relative w-full aspect-[16/9] overflow-hidden rounded-3xl shadow-2xl bg-gray-900 cursor-zoom-in"
           onClick={() => openLightbox(current)}
+          {...swipe}
         >
           <img
             key={current}
@@ -185,23 +232,20 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
             alt={`Image ${current + 1}`}
           />
 
-          {/* Overlays */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
 
-          {/* Counter badge */}
           <div className="absolute top-4 right-4 bg-black/50 backdrop-blur-md text-white text-xs font-semibold px-3 py-1.5 rounded-full border border-white/20">
             {current + 1} / {images.length}
           </div>
 
-          {/* Zoom hint */}
           <div className="absolute bottom-4 left-4 flex items-center gap-1.5 bg-black/40 backdrop-blur-md text-white/70 text-[11px] px-3 py-1.5 rounded-full border border-white/10 pointer-events-none">
             <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
             </svg>
-            Click to zoom
+            <span className="hidden md:inline">Click to zoom</span>
+            <span className="md:hidden">Tap to zoom</span>
           </div>
 
-          {/* Nav arrows */}
           {images.length > 1 && (
             <>
               <NavArrow direction="prev" onClick={prev} />
@@ -210,7 +254,6 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
           )}
         </div>
 
-        {/* Thumbnail strip */}
         {images.length > 1 && (
           <div className="mt-4">
             <ThumbnailStrip images={images} activeIndex={current} onSelect={setCurrent} size="md" />
@@ -218,7 +261,6 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
         )}
       </div>
 
-      {/* ── Lightbox ── */}
       {lightboxOpen && (
         <Lightbox
           images={images}
