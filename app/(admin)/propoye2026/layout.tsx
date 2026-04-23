@@ -34,6 +34,7 @@ type Property = {
   isNewLaunch?: boolean;
   description?: string;
   builderName?: string;
+  qrCodes?: string[];
 };
 
 type Toast = { id: number; message: string; type: "success" | "error" };
@@ -301,6 +302,8 @@ export default function AdminLayout() {
   // ── Property form fields ──────────────────────────────────
   const [propoyeId, setPropoyeId] = useState("");
   const [projectName, setProjectName] = useState("");
+  const [qrFiles, setQrFiles] = useState<File[]>([]);
+  const [qrPreviewUrls, setQrPreviewUrls] = useState<string[]>([]);
   const [projectArea, setProjectArea] = useState("");
   const [location, setLocation] = useState("");
   const [address, setAddress] = useState("");
@@ -413,7 +416,7 @@ if (!towers.trim()) errors.towers = "Towers is required";
   };
 
 const resetForm = () => {
-  setPropoyeId(""); setProjectName(""); setProjectArea("");
+  setPropoyeId(""); setProjectName(""); setQrFiles([]); setQrPreviewUrls([]); setProjectArea("");
   setLocation(""); setAddress(""); setFloors(""); setTowers("");
   setPossessionDate(""); setConfiguration(""); setPricingStartsFrom("");
   setBuilderName(""); // ← add this
@@ -442,6 +445,7 @@ const resetForm = () => {
     try {
       const uploadedImages = await uploadFiles(images);
       const uploadedFloorPlans = await uploadFiles(floorPlanFiles);
+      const uploadedQrCodes = await uploadFiles(qrFiles);
       const body: any = {
         propoyeId, projectName, projectArea, location, address,
         floors: floors, towers: towers,
@@ -449,6 +453,7 @@ const resetForm = () => {
         builderName,pricingEndsAt,
         ...(uploadedImages.length > 0 && { images: uploadedImages }),
         ...(uploadedFloorPlans.length > 0 && { floorPlans: uploadedFloorPlans }),
+        ...(uploadedQrCodes.length > 0 && { qrCodes: uploadedQrCodes }),
       };
       const res = await fetch("/api/property", {
         method: editingId ? "PUT" : "POST",
@@ -482,6 +487,17 @@ const resetForm = () => {
       showToast("Failed to delete property", "error");
     }
   };
+
+  const handleQrChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const files = Array.from(e.target.files || []).slice(0, 5);
+  setQrFiles(files);
+  setQrPreviewUrls(files.map((f) => URL.createObjectURL(f)));
+};
+
+const removeQr = (index: number) => {
+  setQrFiles((p) => p.filter((_, i) => i !== index));
+  setQrPreviewUrls((p) => p.filter((_, i) => i !== index));
+};
 
   const toggleTrending = async (property: Property) => {
     try {
@@ -560,7 +576,7 @@ const isEarlypossesion = async (property: Property) => {
 
   const handleEdit = (p: Property) => {
     setEditingId(p.id);
-    setPropoyeId(p.propoyeId); setProjectName(p.projectName); setProjectArea(p.projectArea);
+    setPropoyeId(p.propoyeId); setProjectName(p.projectName); setQrFiles([]); setQrPreviewUrls(p.qrCodes || []); setProjectArea(p.projectArea);
     setLocation(p.location); setAddress(p.address);
     setFloors(String(p.floors));
 setTowers(String(p.towers));
@@ -762,6 +778,23 @@ setTowers(String(p.towers));
                       <Field label="Project Name" placeholder="e.g. Sunset Heights" value={projectName} onChange={mkChange(setProjectName, "projectName")} error={formErrors.projectName} />
                     </div>
                   </div>
+                  <div className="h-px bg-white/5" />
+<div>
+  <p className="text-xs font-bold text-amber-400 tracking-widest uppercase mb-4 flex items-center gap-2">
+    <span className="w-4 h-px bg-amber-400/50" /> QR Codes
+    <span className="text-gray-600 normal-case tracking-normal font-normal text-xs ml-1">(optional, max 5)</span>
+  </p>
+  <ImageUploadBlock
+    label="QR Code Images"
+    inputId="qrUpload"
+    previews={qrPreviewUrls}
+    newFiles={qrFiles}
+    onChange={handleQrChange}
+    onRemove={removeQr}
+    maxCount={5}
+    isEditing={!!editingId}
+  />
+</div>
                   <div className="h-px bg-white/5" />
                   <div>
                     <p className="text-xs font-bold text-amber-400 tracking-widest uppercase mb-4 flex items-center gap-2"><span className="w-4 h-px bg-amber-400/50" /> Location</p>
