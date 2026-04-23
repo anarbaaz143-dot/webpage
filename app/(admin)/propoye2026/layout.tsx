@@ -105,17 +105,19 @@ function Field({
 }
 
 function ImageUploadBlock({
-  label, inputId, previews, newFiles, onChange, onRemove, maxCount, error, isEditing,
+  label, inputId, previews, newFiles, onChange, onRemove, onRemoveExisting, maxCount, error, isEditing,
 }: {
   label: string; inputId: string; previews: string[]; newFiles: File[];
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onRemove: (i: number) => void; maxCount: number; error?: string; isEditing: boolean;
+  onRemove: (i: number) => void;
+  onRemoveExisting?: (i: number) => void;   // ← new
+  maxCount: number; error?: string; isEditing: boolean;
 }) {
   return (
     <div>
       <label className="block text-xs font-bold text-gray-400 tracking-widest uppercase mb-2">
         {label}
-        {isEditing && <span className="ml-2 text-gray-600 normal-case tracking-normal font-normal">(upload new to replace)</span>}
+        {isEditing && <span className="ml-2 text-gray-600 normal-case tracking-normal font-normal">(click image to remove)</span>}
       </label>
       <label htmlFor={inputId}
         className={`flex items-center justify-center gap-3 border-2 border-dashed rounded-2xl py-7 cursor-pointer transition-all ${
@@ -124,7 +126,7 @@ function ImageUploadBlock({
         <FaUpload className="text-gray-500" />
         <span className="text-sm text-gray-400">
           {previews.length > 0
-            ? `${newFiles.length > 0 ? newFiles.length : previews.length} file(s) — click to change`
+            ? `${previews.length} file(s) — click to add more`
             : `Click to upload (max ${maxCount})`}
         </span>
         <input id={inputId} type="file" multiple accept="image/*" onChange={onChange} className="hidden" />
@@ -132,24 +134,39 @@ function ImageUploadBlock({
       {error && <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1"><FaTimes size={9} /> {error}</p>}
       {previews.length > 0 && (
         <div className="flex gap-3 mt-4 flex-wrap">
-          {previews.map((url, i) => (
-            <div key={i} className="relative group">
-              <img src={url} className="w-24 h-20 object-cover rounded-xl border border-white/10" alt="" />
-              {newFiles[i] && (
-                <button onClick={() => onRemove(i)}
-                  className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full text-[10px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition">✕</button>
-              )}
-              {i === 0 && (
-                <div className="absolute bottom-1 left-1 bg-black/60 text-white text-[9px] px-1.5 py-0.5 rounded-md font-bold">Cover</div>
-              )}
-            </div>
-          ))}
+          {previews.map((url, i) => {
+            const isNewFile = newFiles[i] !== undefined;
+            // For editing mode: indices < (previews.length - newFiles.length) are existing saved images
+            const existingCount = previews.length - newFiles.length;
+            const isExisting = isEditing && i < existingCount;
+
+            return (
+              <div key={i} className="relative group cursor-pointer" onClick={() => {
+                if (isExisting && onRemoveExisting) onRemoveExisting(i);
+                else if (isNewFile) onRemove(i);
+              }}>
+                <img
+                  src={url}
+                  className="w-24 h-20 object-cover rounded-xl border border-white/10 transition-all duration-200 group-hover:brightness-50 group-hover:scale-[1.03]"
+                  alt=""
+                />
+                {/* X overlay */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+                  <div className="w-7 h-7 bg-red-500 rounded-full flex items-center justify-center shadow-lg">
+                    <FaTimes size={11} className="text-white" />
+                  </div>
+                </div>
+                {i === 0 && (
+                  <div className="absolute bottom-1 left-1 bg-black/60 text-white text-[9px] px-1.5 py-0.5 rounded-md font-bold pointer-events-none">Cover</div>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
   );
 }
-
 // ─────────────────────────────────────────────────────────────────────────────
 // DESCRIPTION MODAL
 // ─────────────────────────────────────────────────────────────────────────────
@@ -319,6 +336,9 @@ export default function AdminLayout() {
   const [floorPlanFiles, setFloorPlanFiles] = useState<File[]>([]);
   const [floorPlanPreviewUrls, setFloorPlanPreviewUrls] = useState<string[]>([]);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  const [removedImages, setRemovedImages] = useState<number[]>([]);
+const [removedFloorPlans, setRemovedFloorPlans] = useState<number[]>([]);
+const [removedQrCodes, setRemovedQrCodes] = useState<number[]>([]);
 
   const showToast = (message: string, type: "success" | "error" = "success") => {
     const id = Date.now();
@@ -348,6 +368,8 @@ export default function AdminLayout() {
     setFloorPlanFiles((p) => p.filter((_, i) => i !== index));
     setFloorPlanPreviewUrls((p) => p.filter((_, i) => i !== index));
   };
+
+  
 
   const fetchProperties = async () => {
     setLoading(true);
@@ -424,6 +446,7 @@ const resetForm = () => {
   setImages([]); setImagePreviewUrls([]);
   setFloorPlanFiles([]); setFloorPlanPreviewUrls([]);
   setEditingId(null); setFormErrors({});
+  setRemovedImages([]); setRemovedFloorPlans([]); setRemovedQrCodes([]);
 };
 
   const uploadFiles = async (files: File[]): Promise<string[]> => {
@@ -497,6 +520,19 @@ const resetForm = () => {
 const removeQr = (index: number) => {
   setQrFiles((p) => p.filter((_, i) => i !== index));
   setQrPreviewUrls((p) => p.filter((_, i) => i !== index));
+};
+
+const handleRemoveExistingImage = (i: number) => {
+  setImagePreviewUrls(p => p.filter((_, idx) => idx !== i));
+  setRemovedImages(p => [...p, i]);
+};
+const handleRemoveExistingFloorPlan = (i: number) => {
+  setFloorPlanPreviewUrls(p => p.filter((_, idx) => idx !== i));
+  setRemovedFloorPlans(p => [...p, i]);
+};
+const handleRemoveExistingQr = (i: number) => {
+  setQrPreviewUrls(p => p.filter((_, idx) => idx !== i));
+  setRemovedQrCodes(p => [...p, i]);
 };
 
   const toggleTrending = async (property: Property) => {
@@ -784,16 +820,7 @@ setTowers(String(p.towers));
     <span className="w-4 h-px bg-amber-400/50" /> QR Codes
     <span className="text-gray-600 normal-case tracking-normal font-normal text-xs ml-1">(optional, max 5)</span>
   </p>
-  <ImageUploadBlock
-    label="QR Code Images"
-    inputId="qrUpload"
-    previews={qrPreviewUrls}
-    newFiles={qrFiles}
-    onChange={handleQrChange}
-    onRemove={removeQr}
-    maxCount={5}
-    isEditing={!!editingId}
-  />
+<ImageUploadBlock label="QR Code Images" inputId="qrUpload" previews={qrPreviewUrls} newFiles={qrFiles} onChange={handleQrChange} onRemove={removeQr} maxCount={5} isEditing={!!editingId} />
 </div>
                   <div className="h-px bg-white/5" />
                   <div>
@@ -843,7 +870,7 @@ setTowers(String(p.towers));
                     <p className="text-xs font-bold text-amber-400 tracking-widest uppercase mb-4 flex items-center gap-2"><span className="w-4 h-px bg-amber-400/50" /> Media</p>
                     <div className="space-y-6">
                       <ImageUploadBlock label="Property Images (max 5)" inputId="imageUpload" previews={imagePreviewUrls} newFiles={images} onChange={handleImageChange} onRemove={removeImage} maxCount={5} error={formErrors.images} isEditing={!!editingId} />
-                      <ImageUploadBlock label="Floor Plans (max 10)" inputId="floorPlanUpload" previews={floorPlanPreviewUrls} newFiles={floorPlanFiles} onChange={handleFloorPlanChange} onRemove={removeFloorPlan} maxCount={10} isEditing={!!editingId} />
+                      <ImageUploadBlock label="Floor Plans (max 10)" inputId="floorPlanUpload" previews={floorPlanPreviewUrls} newFiles={floorPlanFiles} onChange={handleFloorPlanChange} onRemove={removeFloorPlan} onRemoveExisting={handleRemoveExistingFloorPlan} maxCount={10} isEditing={!!editingId} />
                     </div>
                   </div>
                   <button onClick={handleSubmit} disabled={submitting || compressing}
