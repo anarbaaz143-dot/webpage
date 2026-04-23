@@ -31,6 +31,7 @@ model Property {
   isNewLaunch         Boolean  @default(false)
   createdAt           DateTime @default(now())
   slug String @default("")
+  qrCodes String[] @default([])
 }
 
 model Setting {

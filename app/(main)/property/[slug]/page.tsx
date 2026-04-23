@@ -271,15 +271,36 @@ export default async function PropertyDetails({ params }: PropertyPageProps) {
                   <BrochureButton
                     projectName={property.projectName}
                     location={property.location}
+
                   />
+                                      {property.qrCodes && property.qrCodes.length > 0 && (
+  <>
+    <SectionDivider />
+    <div className="space-y-3">
+      {property.qrCodes.map((qr, i) => (
+        <div key={i} className="bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col items-center gap-3">
+          <img src={qr} alt={`QR Code ${i + 1}`} className="w-40 h-40 object-contain rounded-xl" />
+          <div className="text-center">
+            <div className="text-white text-xs font-bold">{property.projectName}</div>
+            <div className="text-gray-500 text-[10px] font-mono mt-0.5">{property.propoyeId}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </>
+)}
+                  
 
                   <p className="text-center text-[10px] text-gray-600 pt-1">
                     Our team typically responds within minutes
                   </p>
 
                 </div>
+                
               </div>
+              
             </aside>
+            
 
           </div>
         </div>

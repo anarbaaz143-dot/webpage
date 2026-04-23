@@ -35,7 +35,7 @@ export async function POST(req: Request) {
     const {
       propoyeId, projectName, projectArea, location, address,
       floors, towers, possessionDate, configuration, pricingStartsFrom,
-      pricingEndsAt, images, floorPlans, description, builderName,
+      pricingEndsAt, images, floorPlans, description, builderName, qrCodes,
     } = body;
 
     const slug = `${projectName.toLowerCase().replace(/[^a-z0-9\s]/g, "").trim().replace(/\s+/g, "-")}-${propoyeId.toLowerCase()}`;
@@ -51,6 +51,7 @@ export async function POST(req: Request) {
         description: description ?? "",
         builderName: builderName ?? "",
         slug,
+        qrCodes: qrCodes ?? [],
       },
     });
 
@@ -68,7 +69,7 @@ export async function PUT(req: Request) {
       id, propoyeId, projectName, projectArea, location, address,
       floors, towers, possessionDate, configuration, pricingStartsFrom,
       pricingEndsAt, images, floorPlans, isTrending, description, builderName,
-      isReadyToMove, isUnderConstruction, isNewLaunch, isEarlypossesion,
+      isReadyToMove, isUnderConstruction, isNewLaunch, isEarlypossesion, qrCodes
     } = body;
 
     const updated = await prisma.property.update({
@@ -94,6 +95,7 @@ export async function PUT(req: Request) {
         ...(typeof isUnderConstruction === "boolean" && { isUnderConstruction }),
         ...(typeof isNewLaunch === "boolean"       && { isNewLaunch }),
         ...(typeof isEarlypossesion === "boolean"       && { isEarlypossesion }),
+        ...(qrCodes !== undefined && { qrCodes }),
       },
     });
 
