@@ -70,7 +70,7 @@ export default function AboutPage() {
             />
             {/* Floating badge */}
             <div className="absolute -bottom-5 -right-5 bg-amber-400 text-gray-900 rounded-2xl px-6 py-4 shadow-xl font-bold text-sm">
-              <div className="text-2xl font-extrabold" style={{ fontFamily: "'Playfair Display', serif" }}>15+</div>
+              <div className="text-2xl font-extrabold" style={{ fontFamily: "'Playfair Display', serif" }}>10+</div>
               <div className="text-xs tracking-wide">Cities Covered</div>
             </div>
           </motion.div>
@@ -109,9 +109,9 @@ export default function AboutPage() {
             {/* Mini stats row */}
             <div className="mt-10 flex gap-8">
               {[
-                { value: "1,200+", label: "Listings" },
+                { value: "100+", label: "Listings" },
                 { value: "98%", label: "Satisfaction" },
-                { value: "₹500Cr+", label: "Deals Closed" },
+                { value: "₹100Cr+", label: "Deals Closed" },
               ].map((s) => (
                 <div key={s.label}>
                   <div
