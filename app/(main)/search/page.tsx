@@ -675,7 +675,7 @@ const clearFilters = () => {
               return (
                 <Link
                   key={property.id}
-                  href={`/property/${property.id}`}
+                  href={`/property/${property.slug || property.id}`}
                   className="group bg-white border border-gray-100 rounded-2xl overflow-hidden hover:border-amber-200 hover:shadow-[0_8px_40px_rgba(0,0,0,0.08)] transition-all duration-300 flex"
                 >
                   <div className="relative w-48 flex-shrink-0 overflow-hidden">
