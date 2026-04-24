@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { FaInstagram } from "react-icons/fa";
 
-const CATEGORIES = ["All", "Tips", "Guides", "Investment", "Lifestyle"];
+const CATEGORIES = ["All", "Tips", "Buying Guides", "Legal & RERA", "Real Estate Fun 😄"];
 
 type Post = {
   id: number;

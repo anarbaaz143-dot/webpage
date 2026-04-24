@@ -168,14 +168,26 @@ function Lightbox({ images, index, onClose, onPrev, onNext, setIndex }: Lightbox
         </>
       )}
 
-      {/* Swipe hint — mobile only */}
-      {images.length > 1 && (
-        <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-10 md:hidden">
-          <div className="text-white/40 text-xs font-medium px-3 py-1 rounded-full border border-white/10">
-            ← swipe to navigate · tap image to close
-          </div>
-        </div>
-      )}
+{/* Swipe hint — mobile only */}
+{images.length > 1 && (
+  <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-10 md:hidden">
+    <div className="text-white/40 text-xs font-medium px-3 py-1 rounded-full border border-white/10">
+      ← swipe to navigate · tap image to close
+    </div>
+  </div>
+)}
+
+{/* Keyboard hint — desktop only, right side */}
+{images.length > 1 && (
+  <div className="hidden md:flex absolute right-6 top-1/2 -translate-y-1/2 z-10">
+    <div
+      className="text-white/35 text-[11px] font-medium px-2.5 py-3 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm whitespace-nowrap"
+      
+    >
+      ← arrow keys · click image to close
+    </div>
+  </div>
+)}
 
       {/* Thumbnail strip */}
       {images.length > 1 && (

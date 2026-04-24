@@ -16,7 +16,7 @@ type BlogPost = {
   publishedAt: string;
 };
 
-const CATEGORIES = ["Tips", "Guides", "Investment", "Lifestyle"];
+const CATEGORIES = ["Tips", "Buying Guides", "Legal & RERA", "Real Estate Fun 😄"];
 
 function Field({
   label, placeholder, value, onChange, optional = false,
