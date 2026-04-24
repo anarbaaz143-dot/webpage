@@ -194,10 +194,10 @@ export default function Home() {
       <section className="bg-gray-950 text-white py-6 border-b border-white/10">
         <div className="max-w-5xl mx-auto px-8 flex flex-wrap justify-center gap-10 md:gap-20 text-center">
           {[
-            { value: "1,200+", label: "Properties Listed" },
+            { value: "100+", label: "Properties Listed" },
             { value: "98%", label: "Happy Clients" },
-            { value: "15+", label: "Cities Covered" },
-            { value: "₹500Cr+", label: "Deals Closed" },
+            { value: "10+", label: "Cities Covered" },
+            { value: "₹100Cr+", label: "Deals Closed" },
           ].map((stat) => (
             <div key={stat.label}>
               <div className="text-2xl font-extrabold text-amber-400" style={{ fontFamily: "'Playfair Display', serif" }}>{stat.value}</div>
@@ -401,8 +401,73 @@ export default function Home() {
       </section>
 
       {/* ─── YOUTUBE SECTION ──────────────────────────────────── */}
+
       <YouTubeSection />
-      <FeedbackSection />
+
+{/* ─── WHY CHOOSE PROPOYE ───────────────────────────────── */}
+<section className="py-24 bg-white">
+  <div className="max-w-6xl mx-auto px-6 md:px-8">
+    <div className="text-center mb-16">
+      <div className="inline-flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-full px-5 py-1.5 text-amber-600 text-xs font-bold tracking-widest uppercase mb-5">
+        Why Choose Us
+      </div>
+      <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>
+        Why Choose <span className="text-amber-400">Propoye</span>
+      </h2>
+      <p className="text-gray-400 text-sm max-w-xl mx-auto">Your trusted partner from search to settlement and beyond.</p>
+    </div>
+
+    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {[
+        {
+          icon: "🌏",
+          number: "01",
+          title: "Wide Reach",
+          subtitle: "Pan India Property Network",
+          desc: "Explore verified properties across major cities and emerging markets in India.",
+        },
+        {
+          icon: "✅",
+          number: "02",
+          title: "Verified Listings",
+          subtitle: "100% Verified Properties",
+          desc: "Every property is checked for legal clarity, pricing accuracy, and builder credibility.",
+        },
+        {
+          icon: "🤝",
+          number: "03",
+          title: "Personal Guidance",
+          subtitle: "Expert Assistance",
+          desc: "Our advisors help you choose the right property based on your needs and goals.",
+        },
+        {
+          icon: "🔒",
+          number: "04",
+          title: "Transparent Deals",
+          subtitle: "Safe & Transparent Transactions",
+          desc: "No hidden charges. Complete clarity and trust at every step.",
+        },
+      ].map((item) => (
+        <div key={item.number} className="group bg-gray-50 border border-gray-100 hover:border-amber-200 hover:bg-amber-50/30 rounded-3xl p-7 transition-all duration-300 hover:shadow-[0_10px_40px_rgba(251,191,36,0.1)] hover:-translate-y-1">
+          <div className="text-3xl mb-5">{item.icon}</div>
+          <div className="text-xs font-bold text-amber-400 tracking-widest uppercase mb-2">{item.number}</div>
+          <h3 className="text-lg font-extrabold text-gray-900 mb-1" style={{ fontFamily: "'Playfair Display', serif" }}>{item.title}</h3>
+          <p className="text-sm font-semibold text-gray-600 mb-3">{item.subtitle}</p>
+          <p className="text-xs text-gray-400 leading-relaxed">{item.desc}</p>
+        </div>
+      ))}
+    </div>
+        <div className="text-center mt-12">
+      <p className="text-gray-500 text-sm md:text-base">
+        Looking to buy property anywhere in India?{" "}
+        <span className="text-amber-500 font-bold">Get expert guidance with Propoye today.</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<FeedbackSection />
+     
 
     </div>
   );
