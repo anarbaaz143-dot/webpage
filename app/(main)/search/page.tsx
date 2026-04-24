@@ -112,7 +112,7 @@ function PropertyCard({ property, now }: { property: any; now: Date }) {
 
   return (
     <Link
-      href={`/property/${property.id}`}
+      href={`/property/${property.slug || property.id}`}
       className="group bg-white border border-gray-100 rounded-3xl overflow-hidden hover:border-amber-200 hover:shadow-[0_20px_60px_rgba(0,0,0,0.1)] transition-all duration-500 hover:-translate-y-1 flex flex-col"
     >
       {/* Image */}
