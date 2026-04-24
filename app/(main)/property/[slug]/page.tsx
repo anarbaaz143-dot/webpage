@@ -97,8 +97,14 @@ export default async function PropertyDetails({ params }: PropertyPageProps) {
             <span className="text-gray-300 truncate max-w-[200px]">{property.projectName}</span>
           </nav>
 
-          {/* Image carousel */}
-          <ImageCarousel images={property.images} />
+{/* Image carousel */}
+<ImageCarousel images={property.images} />
+
+{/* 0% Brokerage banner */}
+<div className="flex items-center justify-center gap-2 bg-amber-400/10 border border-amber-400/20 rounded-2xl px-4 py-3 mb-4 -mt-8">
+  <span className="text-amber-400 text-sm font-extrabold tracking-wide">🏷️ 0% Brokerage</span>
+  <span className="text-gray-400 text-xs">— Direct from developer, no hidden charges</span>
+</div>
 
           {/* ─── Main layout: content + sidebar ── */}
           <div className="grid md:grid-cols-3 gap-10 mt-8">
