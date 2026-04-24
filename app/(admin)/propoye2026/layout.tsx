@@ -141,10 +141,15 @@ function ImageUploadBlock({
             const isExisting = isEditing && i < existingCount;
 
             return (
-              <div key={i} className="relative group cursor-pointer" onClick={() => {
-                if (isExisting && onRemoveExisting) onRemoveExisting(i);
-                else if (isNewFile) onRemove(i);
-              }}>
+// AFTER (fixed)
+<div key={i} className="relative group cursor-pointer" onClick={() => {
+  if (isExisting && onRemoveExisting) {
+    onRemoveExisting(i);
+  } else {
+    // i is absolute index; subtract existing count to get index into newFiles array
+    onRemove(i - existingCount);
+  }
+}}>
                 <img
                   src={url}
                   className="w-24 h-20 object-cover rounded-xl border border-white/10 transition-all duration-200 group-hover:brightness-50 group-hover:scale-[1.03]"
@@ -462,21 +467,26 @@ const resetForm = () => {
     return data.images;
   };
 
-  const handleSubmit = async () => {
+const handleSubmit = async () => {
     if (!validateForm()) return;
     setSubmitting(true);
     try {
       const uploadedImages = await uploadFiles(images);
       const uploadedFloorPlans = await uploadFiles(floorPlanFiles);
       const uploadedQrCodes = await uploadFiles(qrFiles);
+
+      const existingImages     = imagePreviewUrls.slice(0, imagePreviewUrls.length - images.length);
+      const existingFloorPlans = floorPlanPreviewUrls.slice(0, floorPlanPreviewUrls.length - floorPlanFiles.length);
+      const existingQrCodes    = qrPreviewUrls.slice(0, qrPreviewUrls.length - qrFiles.length);
+
       const body: any = {
         propoyeId, projectName, projectArea, location, address,
-        floors: floors, towers: towers,
+        floors, towers,
         possessionDate, configuration, pricingStartsFrom,
-        builderName,pricingEndsAt,
-        ...(uploadedImages.length > 0 && { images: uploadedImages }),
-        ...(uploadedFloorPlans.length > 0 && { floorPlans: uploadedFloorPlans }),
-        ...(uploadedQrCodes.length > 0 && { qrCodes: uploadedQrCodes }),
+        builderName, pricingEndsAt,
+        images:     [...existingImages,     ...uploadedImages],
+        floorPlans: [...existingFloorPlans, ...uploadedFloorPlans],
+        qrCodes:    [...existingQrCodes,    ...uploadedQrCodes],
       };
       const res = await fetch("/api/property", {
         method: editingId ? "PUT" : "POST",
@@ -820,7 +830,17 @@ setTowers(String(p.towers));
     <span className="w-4 h-px bg-amber-400/50" /> QR Codes
     <span className="text-gray-600 normal-case tracking-normal font-normal text-xs ml-1">(optional, max 5)</span>
   </p>
-<ImageUploadBlock label="QR Code Images" inputId="qrUpload" previews={qrPreviewUrls} newFiles={qrFiles} onChange={handleQrChange} onRemove={removeQr} maxCount={5} isEditing={!!editingId} />
+<ImageUploadBlock
+  label="QR Code Images"
+  inputId="qrUpload"
+  previews={qrPreviewUrls}
+  newFiles={qrFiles}
+  onChange={handleQrChange}
+  onRemove={removeQr}
+  onRemoveExisting={handleRemoveExistingQr}  // ← ADD THIS
+  maxCount={5}
+  isEditing={!!editingId}
+/>
 </div>
                   <div className="h-px bg-white/5" />
                   <div>
@@ -869,7 +889,19 @@ setTowers(String(p.towers));
                   <div>
                     <p className="text-xs font-bold text-amber-400 tracking-widest uppercase mb-4 flex items-center gap-2"><span className="w-4 h-px bg-amber-400/50" /> Media</p>
                     <div className="space-y-6">
-                      <ImageUploadBlock label="Property Images (max 5)" inputId="imageUpload" previews={imagePreviewUrls} newFiles={images} onChange={handleImageChange} onRemove={removeImage} maxCount={5} error={formErrors.images} isEditing={!!editingId} />
+                     // In your JSX where you render the property images ImageUploadBlock:
+<ImageUploadBlock
+  label="Property Images (max 5)"
+  inputId="imageUpload"
+  previews={imagePreviewUrls}
+  newFiles={images}
+  onChange={handleImageChange}
+  onRemove={removeImage}
+  onRemoveExisting={handleRemoveExistingImage}  // ← ADD THIS
+  maxCount={5}
+  error={formErrors.images}
+  isEditing={!!editingId}
+/>
                       <ImageUploadBlock label="Floor Plans (max 10)" inputId="floorPlanUpload" previews={floorPlanPreviewUrls} newFiles={floorPlanFiles} onChange={handleFloorPlanChange} onRemove={removeFloorPlan} onRemoveExisting={handleRemoveExistingFloorPlan} maxCount={10} isEditing={!!editingId} />
                     </div>
                   </div>
