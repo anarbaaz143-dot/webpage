@@ -54,59 +54,75 @@ export default function AboutPage() {
 
 {/* ─── WHO WE ARE ───────────────────────────────────────── */}
 <section className="py-28 bg-[#faf9f7]">
-  <div className="max-w-5xl mx-auto px-8">
+  <div className="max-w-6xl mx-auto px-8">
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.7 }}
       viewport={{ once: true }}
+      className="grid md:grid-cols-2 gap-16 items-center"
     >
-      {/* Label */}
-      <div className="text-amber-500 text-xs font-extrabold tracking-widest uppercase mb-4">
-        Who We Are
+      {/* ── Left: Text ── */}
+      <div>
+        <div className="text-amber-500 text-xs font-extrabold tracking-widest uppercase mb-4">
+          Who We Are
+        </div>
+
+        <h2
+          className="text-4xl md:text-5xl font-extrabold mb-8 leading-tight text-gray-900"
+          style={{ fontFamily: "'Playfair Display', serif" }}
+        >
+          Redefining Property <br />
+          Buying{" "}
+          <span className="text-amber-500">Across India</span>
+        </h2>
+
+        <div className="space-y-5 text-gray-600 text-base leading-relaxed">
+          <p>
+            Propoye is a modern real estate platform built to simplify the way people
+            search, compare, and buy property across India.
+          </p>
+          <p>
+            In a market full of confusion, hidden charges, and unreliable information,
+            we focus on what truly matters — verified listings, transparent deals,
+            and expert guidance.
+          </p>
+          <p>
+            We believe buying a property should not be stressful or complicated.
+            Whether you're a first-time home buyer or a seasoned investor,
+            Propoye helps you make smarter decisions with confidence.
+          </p>
+          <p>
+            Our mission is simple: make property buying easier, safer,
+            and more accessible for everyone.
+          </p>
+        </div>
+
+        {/* Trust badge */}
+        <div className="mt-10 inline-flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-2xl px-6 py-4">
+          <svg className="w-6 h-6 text-amber-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+          <span className="text-gray-800 font-bold text-sm md:text-base">
+            No Brokerage. No Confusion. Just Smart Property Decisions.
+          </span>
+        </div>
       </div>
 
-      {/* Heading */}
-      <h2
-        className="text-4xl md:text-5xl font-extrabold mb-8 leading-tight text-gray-900"
-        style={{ fontFamily: "'Playfair Display', serif" }}
-      >
-        Redefining Property <br />
-        Buying{" "}
-        <span className="text-amber-500">Across India</span>
-      </h2>
-
-      {/* Body */}
-      <div className="space-y-5 text-gray-600 text-base leading-relaxed max-w-3xl">
-        <p>
-          Propoye is a modern real estate platform built to simplify the way people
-          search, compare, and buy property across India.
-        </p>
-        <p>
-          In a market full of confusion, hidden charges, and unreliable information,
-          we focus on what truly matters — verified listings, transparent deals,
-          and expert guidance.
-        </p>
-        <p>
-          We believe buying a property should not be stressful or complicated.
-          Whether you're a first-time home buyer or a seasoned investor,
-          Propoye helps you make smarter decisions with confidence.
-        </p>
-        <p>
-          Our mission is simple: make property buying easier, safer,
-          and more accessible for everyone.
-        </p>
+      {/* ── Right: Image ── */}
+      <div className="relative">
+        <img
+          src="https://images.unsplash.com/photo-1560518883-ce09059eeffa"
+          className="rounded-3xl shadow-2xl w-full object-cover h-[520px]"
+          alt="Who we are"
+        />
+        {/* Floating badge */}
+        <div className="absolute -bottom-5 -right-5 bg-amber-400 text-gray-900 rounded-2xl px-6 py-4 shadow-xl font-bold text-sm">
+          <div className="text-2xl font-extrabold" style={{ fontFamily: "'Playfair Display', serif" }}>10+</div>
+          <div className="text-xs tracking-wide">Cities Covered</div>
+        </div>
       </div>
 
-      {/* Trust badge */}
-      <div className="mt-10 inline-flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-2xl px-6 py-4">
-        <svg className="w-6 h-6 text-amber-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-        </svg>
-        <span className="text-gray-800 font-bold text-sm md:text-base">
-          No Brokerage. No Confusion. Just Smart Property Decisions.
-        </span>
-      </div>
     </motion.div>
   </div>
 </section>
