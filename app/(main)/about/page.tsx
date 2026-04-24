@@ -52,84 +52,64 @@ export default function AboutPage() {
         </motion.div>
       </section>
 
-      {/* ─── WHO WE ARE ───────────────────────────────────────── */}
-      <section className="py-28 bg-white">
-        <div className="max-w-6xl mx-auto px-8 grid md:grid-cols-2 gap-16 items-center">
+{/* ─── WHO WE ARE ───────────────────────────────────────── */}
+<section className="py-28 bg-[#faf9f7]">
+  <div className="max-w-5xl mx-auto px-8">
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7 }}
+      viewport={{ once: true }}
+    >
+      {/* Label */}
+      <div className="text-amber-500 text-xs font-extrabold tracking-widest uppercase mb-4">
+        Who We Are
+      </div>
 
-          <motion.div
-            initial={{ opacity: 0, x: -60 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="relative"
-          >
-            <img
-              src="https://images.unsplash.com/photo-1560518883-ce09059eeffa"
-              className="rounded-3xl shadow-2xl w-full object-cover h-[420px]"
-              alt="Who we are"
-            />
-            {/* Floating badge */}
-            <div className="absolute -bottom-5 -right-5 bg-amber-400 text-gray-900 rounded-2xl px-6 py-4 shadow-xl font-bold text-sm">
-              <div className="text-2xl font-extrabold" style={{ fontFamily: "'Playfair Display', serif" }}>10+</div>
-              <div className="text-xs tracking-wide">Cities Covered</div>
-            </div>
-          </motion.div>
+      {/* Heading */}
+      <h2
+        className="text-4xl md:text-5xl font-extrabold mb-8 leading-tight text-gray-900"
+        style={{ fontFamily: "'Playfair Display', serif" }}
+      >
+        Redefining Property <br />
+        Buying{" "}
+        <span className="text-amber-500">Across India</span>
+      </h2>
 
-          <motion.div
-            initial={{ opacity: 0, x: 60 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-          >
-            <div className="inline-flex items-center gap-2 bg-gray-100 rounded-full px-4 py-1.5 text-gray-500 text-xs font-bold tracking-widest uppercase mb-5">
-              Who We Are
-            </div>
+      {/* Body */}
+      <div className="space-y-5 text-gray-600 text-base leading-relaxed max-w-3xl">
+        <p>
+          Propoye is a modern real estate platform built to simplify the way people
+          search, compare, and buy property across India.
+        </p>
+        <p>
+          In a market full of confusion, hidden charges, and unreliable information,
+          we focus on what truly matters — verified listings, transparent deals,
+          and expert guidance.
+        </p>
+        <p>
+          We believe buying a property should not be stressful or complicated.
+          Whether you're a first-time home buyer or a seasoned investor,
+          Propoye helps you make smarter decisions with confidence.
+        </p>
+        <p>
+          Our mission is simple: make property buying easier, safer,
+          and more accessible for everyone.
+        </p>
+      </div>
 
-            <h2
-              className="text-4xl font-extrabold mb-6 leading-tight"
-              style={{ fontFamily: "'Playfair Display', serif" }}
-            >
-              A Platform Built on{" "}
-              <span className="text-amber-500">Trust</span>
-            </h2>
-
-            <p className="text-gray-500 text-base leading-relaxed mb-5">
-              PROPOYE is a modern real estate platform built to connect buyers,
-              sellers, and investors with premium properties across top locations.
-              We combine technology, trust, and transparency to make your
-              property journey seamless.
-            </p>
-
-            <p className="text-gray-500 text-base leading-relaxed">
-              Whether you're looking for your dream home or the next smart
-              investment, we provide curated listings and market insights
-              tailored to your needs.
-            </p>
-
-            {/* Mini stats row */}
-            <div className="mt-10 flex gap-8">
-              {[
-                { value: "100+", label: "Listings" },
-                { value: "98%", label: "Satisfaction" },
-                { value: "₹100Cr+", label: "Deals Closed" },
-              ].map((s) => (
-                <div key={s.label}>
-                  <div
-                    className="text-xl font-extrabold text-gray-900"
-                    style={{ fontFamily: "'Playfair Display', serif" }}
-                  >
-                    {s.value}
-                  </div>
-                  <div className="text-xs text-gray-400 tracking-wide uppercase mt-0.5">
-                    {s.label}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-
-        </div>
-      </section>
+      {/* Trust badge */}
+      <div className="mt-10 inline-flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-2xl px-6 py-4">
+        <svg className="w-6 h-6 text-amber-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+        </svg>
+        <span className="text-gray-800 font-bold text-sm md:text-base">
+          No Brokerage. No Confusion. Just Smart Property Decisions.
+        </span>
+      </div>
+    </motion.div>
+  </div>
+</section>
 
       {/* ─── CORE VALUES ──────────────────────────────────────── */}
       <section className="py-28 bg-gray-50 relative overflow-hidden">
