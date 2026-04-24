@@ -117,118 +117,48 @@ function Lightbox({ images, index, onClose, onPrev, onNext, setIndex }: Lightbox
 
   return (
     <div
-      className="fixed inset-0 z-[999] flex flex-col items-center justify-center"
+      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center"
       style={{ background: "rgba(0,0,0,0.95)" }}
       {...swipe}
     >
-      return (
-  <div
-    className="fixed inset-0 z-[999] flex flex-col items-center justify-center"
-    style={{ background: "rgba(0,0,0,0.95)" }}
-    onClick={onClose}
-  >
-    {/* Top bar */}
-    <div className="absolute top-5 left-0 right-0 z-10 px-5" onClick={(e) => e.stopPropagation()}>
-      <div className="flex items-center justify-between">
-        <div className="bg-white/10 backdrop-blur-md text-white text-xs font-semibold px-4 py-1.5 rounded-full border border-white/20">
-          {index + 1} / {images.length}
-        </div>
+      <div className="absolute inset-0" onClick={onClose} />
+
+      {/* Top bar */}
+<div className="absolute top-5 left-0 right-0 z-10 px-5 pt-safe" onClick={(e) => e.stopPropagation()}>
+        {/* Mobile back button */}
         <button
           onClick={onClose}
-          className="w-11 h-11 flex items-center justify-center bg-white/10 hover:bg-white/20 text-white rounded-full border border-white/20 transition-all duration-200 hover:scale-110 text-lg"
+          className="flex items-center gap-2 md:hidden bg-white/10 hover:bg-white/20 text-white text-sm font-semibold px-4 py-2 rounded-full border border-white/20 transition-all"
+        >
+          ← Back
+        </button>
+
+        {/* Counter */}
+        <div className="bg-white/10 backdrop-blur-md text-white text-xs font-semibold px-4 py-1.5 rounded-full border border-white/20 mx-auto md:mx-0">
+          {index + 1} / {images.length}
+        </div>
+
+        {/* Desktop close */}
+        <button
+          onClick={onClose}
+          className="hidden md:flex w-11 h-11 items-center justify-center bg-white/10 hover:bg-white/20 text-white rounded-full border border-white/20 transition-all duration-200 hover:scale-110 text-lg"
         >✕</button>
       </div>
-    </div>
 
-    {/* Main image with swipe */}
-    <div
-      className="relative z-10 flex items-center justify-center w-full h-full px-4 md:px-20 py-16"
-      {...swipe}
-      onClick={(e) => e.stopPropagation()}
-    >
-      <img
-        key={index}
-        src={images[index]}
-        alt={`Image ${index + 1}`}
-        className="max-w-full max-h-full object-contain rounded-2xl shadow-2xl select-none"
-        style={{ animation: "fadeIn 0.2s ease" }}
-      />
-    </div>
-
-    {/* Nav arrows — desktop only */}
-    {images.length > 1 && (
-      <>
-        <NavArrow direction="prev" size="lg" onClick={() => onPrev()} />
-        <NavArrow direction="next" size="lg" onClick={() => onNext()} />
-      </>
-    )}
-
-    {/* Swipe hint — mobile only */}
-    {images.length > 1 && (
-      <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-10 md:hidden" onClick={(e) => e.stopPropagation()}>
-        <div className="text-white/40 text-xs font-medium px-3 py-1 rounded-full border border-white/10">
-          ← swipe · tap outside to close →
-        </div>
-      </div>
-    )}
-
-    {/* Thumbnail strip */}
-    {images.length > 1 && (
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 max-w-[90vw]" onClick={(e) => e.stopPropagation()}>
-        <ThumbnailStrip images={images} activeIndex={index} onSelect={setIndex} size="sm" />
-      </div>
-    )}
-
-    <style>{`
-      @keyframes fadeIn {
-        from { opacity: 0; transform: scale(0.97); }
-        to   { opacity: 1; transform: scale(1); }
-      }
-    `}</style>
-  </div>
-);
-
-{/* Top bar */}
-<div className="absolute top-5 left-0 right-0 z-10 px-5"> 
-  {/* Mobile layout */}
-  <div className="flex items-center justify-between md:hidden">
-    <button
-      onClick={onClose}
-      className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white text-sm font-semibold px-4 py-2 rounded-full border border-white/20 transition-all"
-    >
-      ← Back
-    </button>
-    <div className="bg-white/10 backdrop-blur-md text-white text-xs font-semibold px-4 py-1.5 rounded-full border border-white/20">
-      {index + 1} / {images.length}
-    </div>
-  </div>
-
-  {/* Desktop layout */}
-  <div className="hidden md:flex items-center justify-between">
-    <div className="bg-white/10 backdrop-blur-md text-white text-xs font-semibold px-4 py-1.5 rounded-full border border-white/20">
-      {index + 1} / {images.length}
-    </div>
-    <button
-      onClick={onClose}
-      className="w-11 h-11 flex items-center justify-center bg-white/10 hover:bg-white/20 text-white rounded-full border border-white/20 transition-all duration-200 hover:scale-110 text-lg"
-    >✕</button>
-  </div>
+{/* Main image with swipe — tap image to close, swipe to navigate */}
+<div
+  className="relative z-10 flex items-center justify-center w-full h-full px-4 md:px-20 py-16"
+  {...swipe}
+>
+  <img
+    key={index}
+    src={images[index]}
+    alt={`Image ${index + 1}`}
+    className="max-w-full max-h-full object-contain rounded-2xl shadow-2xl select-none cursor-pointer"
+    style={{ animation: "fadeIn 0.2s ease" }}
+    onClick={onClose}
+  />
 </div>
-
-      {/* Main image with swipe */}
-      <div
-        className="relative z-10 flex items-center justify-center w-full h-full px-4 md:px-20 py-16"
-        {...swipe}
-      >
-        <img
-          key={index}
-          src={images[index]}
-          alt={`Image ${index + 1}`}
-          className="max-w-full max-h-full object-contain rounded-2xl shadow-2xl select-none"
-          style={{ animation: "fadeIn 0.2s ease" }}
-          onClick={(e) => e.stopPropagation()}
-        />
-      </div>
 
       {/* Nav arrows — desktop only */}
       {images.length > 1 && (
@@ -242,7 +172,7 @@ function Lightbox({ images, index, onClose, onPrev, onNext, setIndex }: Lightbox
       {images.length > 1 && (
         <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-10 md:hidden">
           <div className="text-white/40 text-xs font-medium px-3 py-1 rounded-full border border-white/10">
-            ← swipe →
+            ← swipe to navigate · tap image to close
           </div>
         </div>
       )}
