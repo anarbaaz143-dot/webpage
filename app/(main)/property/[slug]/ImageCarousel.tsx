@@ -123,27 +123,32 @@ function Lightbox({ images, index, onClose, onPrev, onNext, setIndex }: Lightbox
     >
       <div className="absolute inset-0" onClick={onClose} />
 
-      {/* Top bar */}
-      <div className="absolute top-5 left-0 right-0 z-10 flex items-center justify-between px-5">
-        {/* Mobile back button */}
-        <button
-          onClick={onClose}
-          className="flex items-center gap-2 md:hidden bg-white/10 hover:bg-white/20 text-white text-sm font-semibold px-4 py-2 rounded-full border border-white/20 transition-all"
-        >
-          ← Back
-        </button>
+{/* Top bar */}
+<div className="absolute top-5 left-0 right-0 z-10 px-5">
+  {/* Mobile layout */}
+  <div className="flex items-center justify-between md:hidden">
+    <button
+      onClick={onClose}
+      className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white text-sm font-semibold px-4 py-2 rounded-full border border-white/20 transition-all"
+    >
+      ← Back
+    </button>
+    <div className="bg-white/10 backdrop-blur-md text-white text-xs font-semibold px-4 py-1.5 rounded-full border border-white/20">
+      {index + 1} / {images.length}
+    </div>
+  </div>
 
-        {/* Counter */}
-        <div className="bg-white/10 backdrop-blur-md text-white text-xs font-semibold px-4 py-1.5 rounded-full border border-white/20 mx-auto md:mx-0">
-          {index + 1} / {images.length}
-        </div>
-
-        {/* Desktop close */}
-        <button
-          onClick={onClose}
-          className="hidden md:flex w-11 h-11 items-center justify-center bg-white/10 hover:bg-white/20 text-white rounded-full border border-white/20 transition-all duration-200 hover:scale-110 text-lg"
-        >✕</button>
-      </div>
+  {/* Desktop layout */}
+  <div className="hidden md:flex items-center justify-between">
+    <div className="bg-white/10 backdrop-blur-md text-white text-xs font-semibold px-4 py-1.5 rounded-full border border-white/20">
+      {index + 1} / {images.length}
+    </div>
+    <button
+      onClick={onClose}
+      className="w-11 h-11 flex items-center justify-center bg-white/10 hover:bg-white/20 text-white rounded-full border border-white/20 transition-all duration-200 hover:scale-110 text-lg"
+    >✕</button>
+  </div>
+</div>
 
       {/* Main image with swipe */}
       <div
