@@ -9,7 +9,7 @@ interface BrochureButtonProps {
 }
 
 // ── Constants ────────────────────────────────────────────────
-const WHATSAPP_NUMBER = "919321759929";
+const WHATSAPP_NUMBER = "919702162636";
 
 const DownloadIcon = ({ className }: { className?: string }) => (
   <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
