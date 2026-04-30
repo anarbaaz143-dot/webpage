@@ -18,16 +18,17 @@ type Article = {
 };
 
 export default function NewsDetailPage() {
-  const { id } = useParams();
+  const params = useParams();
+const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
   const [article, setArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`/api/news?id=${id}`)
+    fetch(`/api/news?slug=${slug}`)
       .then((r) => r.json())
       .then((data) => { setArticle(data); setLoading(false); })
       .catch(() => { setLoading(false); });
-  }, [id]);
+  }, [slug]);
 
   if (loading) return (
     <div className="min-h-screen bg-white flex items-center justify-center">
