@@ -467,10 +467,11 @@ export default function Home() {
     </div>
   </div>
 </section>
+<ExploreLocalities />
 
 <FeedbackSection />
      <SmartLinksSection />  
-     <ExploreLocalities />
+     
 
     </div>
   );
