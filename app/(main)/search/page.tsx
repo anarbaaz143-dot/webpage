@@ -115,7 +115,6 @@ function PropertyCard({ property, now }: { property: any; now: Date }) {
       href={`/property/${property.slug || property.id}`}
       className="group bg-white border border-gray-100 rounded-3xl overflow-hidden hover:border-amber-200 hover:shadow-[0_20px_60px_rgba(0,0,0,0.1)] transition-all duration-500 hover:-translate-y-1 flex flex-col"
     >
-      {/* Image */}
       <div className="relative overflow-hidden h-52 flex-shrink-0">
         <img
           src={property.images?.[0]}
@@ -124,44 +123,40 @@ function PropertyCard({ property, now }: { property: any; now: Date }) {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
-        {/* Top badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-1.5">
           {property.isTrending && (
             <div className="inline-flex items-center gap-1 bg-amber-400 text-gray-900 text-[10px] font-extrabold px-2.5 py-1 rounded-full shadow">
               🔥 Trending
             </div>
           )}
-{property.isReadyToMove && (
-  <div className="inline-flex items-center gap-1 bg-green-400 text-green-900 text-[10px] font-extrabold px-2.5 py-1 rounded-full shadow">
-    ✓ Ready to Move
-  </div>
-)}
-{property.isUnderConstruction && (
-  <div className="inline-flex items-center gap-1 bg-orange-400 text-orange-900 text-[10px] font-extrabold px-2.5 py-1 rounded-full shadow">
-    🏗 Under Construction
-  </div>
-)}
-{property.isNewLaunch && (
-  <div className="inline-flex items-center gap-1 bg-blue-400 text-blue-900 text-[10px] font-extrabold px-2.5 py-1 rounded-full shadow">
-    🚀 New Launch
-  </div>
-)}
-
-{property.isEarlypossesion && (
-  <div className="inline-flex items-center gap-1 bg-blue-400 text-blue-900 text-[10px] font-extrabold px-2.5 py-1 rounded-full shadow">
-    🌏 Early Possession
-  </div>
-)}
+          {property.isReadyToMove && (
+            <div className="inline-flex items-center gap-1 bg-green-400 text-green-900 text-[10px] font-extrabold px-2.5 py-1 rounded-full shadow">
+              ✓ Ready to Move
+            </div>
+          )}
+          {property.isUnderConstruction && (
+            <div className="inline-flex items-center gap-1 bg-orange-400 text-orange-900 text-[10px] font-extrabold px-2.5 py-1 rounded-full shadow">
+              🏗 Under Construction
+            </div>
+          )}
+          {property.isNewLaunch && (
+            <div className="inline-flex items-center gap-1 bg-blue-400 text-blue-900 text-[10px] font-extrabold px-2.5 py-1 rounded-full shadow">
+              🚀 New Launch
+            </div>
+          )}
+          {property.isEarlypossesion && (
+            <div className="inline-flex items-center gap-1 bg-blue-400 text-blue-900 text-[10px] font-extrabold px-2.5 py-1 rounded-full shadow">
+              🌏 Early Possession
+            </div>
+          )}
         </div>
 
-        {/* Project area pill */}
         {property.projectArea && (
           <div className="absolute top-3 right-3 bg-black/50 backdrop-blur-md text-white text-[9px] font-semibold px-2 py-0.5 rounded-full border border-white/20">
             📐 {property.projectArea}
           </div>
         )}
 
-        {/* Price overlay at bottom */}
         <div className="absolute bottom-3 left-3 right-3 flex items-end justify-between">
           <div>
             <div className="text-white text-lg font-extrabold leading-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
@@ -175,7 +170,6 @@ function PropertyCard({ property, now }: { property: any; now: Date }) {
         </div>
       </div>
 
-      {/* Content */}
       <div className="p-5 flex flex-col flex-1">
         <h2
           className="text-[15px] font-extrabold mb-0.5 text-gray-900 group-hover:text-amber-500 transition-colors leading-snug"
@@ -191,7 +185,6 @@ function PropertyCard({ property, now }: { property: any; now: Date }) {
           <span className="truncate">{property.location}</span>
         </div>
 
-        {/* BHK chips */}
         {bhkList.length > 0 && (
           <div className="flex flex-wrap gap-1 mb-3">
             {bhkList.map((b: string) => (
@@ -202,24 +195,20 @@ function PropertyCard({ property, now }: { property: any; now: Date }) {
           </div>
         )}
 
-        {/* Stats row */}
         <div className="flex flex-wrap gap-1.5 mb-2">
           {property.floors && <StatBadge icon="🏢" label={`${property.floors} Floors`} />}
           {property.towers && <StatBadge icon="🗼" label={`${property.towers} Towers`} />}
           {property.possessionDate && !ready && <StatBadge icon="📅" label={property.possessionDate} />}
         </div>
 
-        {/* Description snippet */}
         {property.description && (
           <p className="text-[10px] text-gray-400 leading-relaxed mt-1 line-clamp-2 flex-1">
             {property.description}
           </p>
         )}
 
-        {/* Construction bar */}
         <ConstructionProgress possessionDate={property.possessionDate || ""} now={now} />
 
-        {/* CTA */}
         <div className="mt-4 flex items-center justify-between">
           <span className="text-[10px] text-gray-400">
             {property.floorPlans?.length > 0 ? `${property.floorPlans.length} floor plan${property.floorPlans.length > 1 ? "s" : ""}` : ""}
@@ -261,12 +250,30 @@ export default function SearchPage() {
   const router = useRouter();
   const now = useMemo(() => new Date(), []);
 
+  // ── all useState BEFORE any useEffect ──
   const [query, setQuery] = useState("");
   const [inputValue, setInputValue] = useState("");
+  const [allResults, setAllResults] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-useEffect(() => {
+  const [activeBHK, setActiveBHK] = useState<string | null>(null);
+  const [activePriceIdx, setActivePriceIdx] = useState<number | null>(null);
+  const [onlyTrending, setOnlyTrending] = useState(false);
+  const [onlyReady, setOnlyReady] = useState(false);
+  const [onlyUnderConstruction, setOnlyUnderConstruction] = useState(false);
+  const [onlyNewLaunch, setOnlyNewLaunch] = useState(false);
+  const [onlyEarlypossesion, setOnlyEarlypossesion] = useState(false);
+  const [sortKey, setSortKey] = useState<SortKey>("relevance");
+  const [viewMode, setViewMode] = useState<ViewMode>("grid");
+  const [showAllPrices, setShowAllPrices] = useState(false);
+  const [showPricePanel, setShowPricePanel] = useState(false);
+
+  // ── parse URL params on mount ──
+  useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const q = params.get("q") || "";
+    const bhkParam = params.get("bhk"); // e.g. "1", "2", "3", "4+"
 
     const bhkMatch = q.match(/^(\d)\+?\s*BHK$/i);
     if (bhkMatch) {
@@ -297,28 +304,18 @@ useEffect(() => {
       return;
     }
 
+    // Normal locality/text search
     setQuery(q);
     setInputValue(q);
+
+    // If &bhk= param present, activate the BHK chip on top of the locality search
+    if (bhkParam && ["1", "2", "3", "4+"].includes(bhkParam)) {
+      setActiveBHK(bhkParam);
+    }
   }, []);
 
-  const [allResults, setAllResults] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  // filters
-  const [activeBHK, setActiveBHK] = useState<string | null>(null);
-  const [activePriceIdx, setActivePriceIdx] = useState<number | null>(null);
-  const [onlyTrending, setOnlyTrending] = useState(false);
-  const [onlyReady, setOnlyReady] = useState(false);
-  const [onlyUnderConstruction, setOnlyUnderConstruction] = useState(false);
-const [onlyNewLaunch, setOnlyNewLaunch] = useState(false);
-const [onlyEarlypossesion, setOnlyEarlypossesion] = useState(false);
-  const [sortKey, setSortKey] = useState<SortKey>("relevance");
-  const [viewMode, setViewMode] = useState<ViewMode>("grid");
-  const [showAllPrices, setShowAllPrices] = useState(false);
-  const [showPricePanel, setShowPricePanel] = useState(false);
-
-useEffect(() => {
+  // ── fetch results whenever query changes ──
+  useEffect(() => {
     if (!query.trim()) { setAllResults([]); return; }
     const timeout = setTimeout(async () => {
       setLoading(true);
@@ -332,8 +329,11 @@ useEffect(() => {
       } catch { setAllResults([]); }
       finally { setLoading(false); }
       if (query !== "__all__") {
-        setActiveBHK(null); setActivePriceIdx(null);
-        setOnlyTrending(false); setOnlyReady(false); setSortKey("relevance");
+        // Don't reset activeBHK here — it may have been set from URL param
+        setActivePriceIdx(null);
+        setOnlyTrending(false);
+        setOnlyReady(false);
+        setSortKey("relevance");
       }
     }, 300);
     return () => clearTimeout(timeout);
@@ -361,30 +361,28 @@ useEffect(() => {
     }
     if (onlyTrending) list = list.filter((p) => p.isTrending);
     if (onlyReady) list = list.filter((p) => p.isReadyToMove);
-if (onlyUnderConstruction) list = list.filter((p) => p.isUnderConstruction);
-if (onlyNewLaunch) list = list.filter((p) => p.isNewLaunch);
-if (onlyEarlypossesion) list = list.filter((p) => p.isEarlypossesion);
+    if (onlyUnderConstruction) list = list.filter((p) => p.isUnderConstruction);
+    if (onlyNewLaunch) list = list.filter((p) => p.isNewLaunch);
+    if (onlyEarlypossesion) list = list.filter((p) => p.isEarlypossesion);
     if (sortKey === "price_asc") list.sort((a, b) => (parsePriceCr(a.pricingStartsFrom) ?? 999) - (parsePriceCr(b.pricingStartsFrom) ?? 999));
     else if (sortKey === "price_desc") list.sort((a, b) => (parsePriceCr(b.pricingStartsFrom) ?? 0) - (parsePriceCr(a.pricingStartsFrom) ?? 0));
     else if (sortKey === "newest") list.sort((a, b) => new Date(b.createdAt ?? 0).getTime() - new Date(a.createdAt ?? 0).getTime());
     return list;
-}, [allResults, activeBHK, activePriceIdx, onlyTrending, onlyReady, onlyUnderConstruction, onlyNewLaunch, onlyEarlypossesion, sortKey, now]);
+  }, [allResults, activeBHK, activePriceIdx, onlyTrending, onlyReady, onlyUnderConstruction, onlyNewLaunch, onlyEarlypossesion, sortKey, now]);
 
   const filteredOut = allResults.length - results.length;
   const hasFilters = activeBHK || activePriceIdx !== null || onlyTrending || onlyReady || onlyUnderConstruction || onlyNewLaunch || onlyEarlypossesion;
 
-const clearFilters = () => {
-  setActiveBHK(null); setActivePriceIdx(null);
-  setOnlyTrending(false); setOnlyReady(false);
-  setOnlyUnderConstruction(false); setOnlyNewLaunch(false);
-  setOnlyEarlypossesion(false); 
-  setSortKey("relevance");
-};
+  const clearFilters = () => {
+    setActiveBHK(null); setActivePriceIdx(null);
+    setOnlyTrending(false); setOnlyReady(false);
+    setOnlyUnderConstruction(false); setOnlyNewLaunch(false);
+    setOnlyEarlypossesion(false);
+    setSortKey("relevance");
+  };
 
-  // Stats from results
   const stats = useMemo(() => {
     if (!allResults.length) return null;
-    
     const prices = allResults.map(p => parsePriceCr(p.pricingStartsFrom || "")).filter(Boolean) as number[];
     const minPrice = prices.length ? Math.min(...prices) : null;
     const maxPrice = prices.length ? Math.max(...prices) : null;
@@ -400,15 +398,12 @@ const clearFilters = () => {
 
       {/* ─── HERO ─────────────────────────────────────────────── */}
       <section className="relative bg-gray-950 pt-14 pb-0 overflow-hidden">
-        {/* dot grid */}
         <div className="absolute inset-0 opacity-[0.07]" style={{ backgroundImage: "radial-gradient(circle at 1.5px 1.5px, #fff 1px, transparent 0)", backgroundSize: "28px 28px" }} />
-        {/* glow blobs */}
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-amber-400/8 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute top-10 right-1/4 w-72 h-72 bg-orange-400/6 rounded-full blur-2xl pointer-events-none" />
 
         <div className="relative z-10 max-w-5xl mx-auto px-6 pb-10">
 
-          {/* breadcrumb */}
           <div className="flex items-center gap-2 text-xs text-gray-600 mb-10">
             <Link href="/" className="hover:text-amber-400 transition-colors">Home</Link>
             <span className="text-gray-700">›</span>
@@ -422,7 +417,6 @@ const clearFilters = () => {
             <p className="text-gray-400 text-sm">Search across thousands of verified properties — by city, locality, or project</p>
           </div>
 
-          {/* Search bar */}
           <div className="flex gap-3 max-w-3xl mx-auto">
             <div className="flex-1 relative">
               <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -454,7 +448,6 @@ const clearFilters = () => {
             </button>
           </div>
 
-          {/* Popular chips */}
           {!query && (
             <div className="flex flex-wrap justify-center gap-2 mt-5">
               <span className="text-xs text-gray-600 self-center mr-1">Popular:</span>
@@ -470,10 +463,8 @@ const clearFilters = () => {
             </div>
           )}
 
-          {/* ── Filter bar (only when results) ── */}
           {allResults.length > 0 && (
             <div className="mt-6 space-y-3">
-              {/* Row 1: BHK + status */}
               <div className="flex flex-wrap items-center gap-2">
                 <span className="text-[10px] text-gray-600 font-semibold uppercase tracking-widest mr-1">BHK</span>
                 {BHK_OPTIONS.map((b) => (
@@ -482,9 +473,9 @@ const clearFilters = () => {
                 <div className="w-px h-4 bg-white/10 mx-1" />
                 <Chip label="Trending" active={onlyTrending} onClick={() => setOnlyTrending(!onlyTrending)} icon="🔥" />
                 <Chip label="Ready to Move" active={onlyReady} onClick={() => setOnlyReady(!onlyReady)} icon="✓" />
-<Chip label="Under Construction" active={onlyUnderConstruction} onClick={() => setOnlyUnderConstruction(!onlyUnderConstruction)} icon="🏗" />
-<Chip label="New Launch" active={onlyNewLaunch} onClick={() => setOnlyNewLaunch(!onlyNewLaunch)} icon="🚀" />
-  <Chip label="Early possession" active={onlyEarlypossesion} onClick={() => setOnlyEarlypossesion(!onlyEarlypossesion)} icon="🌏" />
+                <Chip label="Under Construction" active={onlyUnderConstruction} onClick={() => setOnlyUnderConstruction(!onlyUnderConstruction)} icon="🏗" />
+                <Chip label="New Launch" active={onlyNewLaunch} onClick={() => setOnlyNewLaunch(!onlyNewLaunch)} icon="🚀" />
+                <Chip label="Early Possession" active={onlyEarlypossesion} onClick={() => setOnlyEarlypossesion(!onlyEarlypossesion)} icon="🌏" />
                 {hasFilters && (
                   <button onClick={clearFilters} className="ml-1 text-[10px] text-gray-600 hover:text-red-400 underline transition-colors font-medium">
                     Clear all
@@ -492,7 +483,6 @@ const clearFilters = () => {
                 )}
               </div>
 
-              {/* Row 2: Price ranges */}
               <div className="flex flex-wrap items-center gap-2">
                 <span className="text-[10px] text-gray-600 font-semibold uppercase tracking-widest mr-1">Price</span>
                 {visiblePrices.map((opt, idx) => (
@@ -509,11 +499,10 @@ const clearFilters = () => {
           )}
         </div>
 
-        {/* White fade at bottom */}
         <div className="absolute bottom-0 inset-x-0 h-8 bg-gradient-to-t from-[#fafaf8] to-transparent" />
       </section>
 
-      {/* ─── STATS BAR (when results exist) ─────────────────── */}
+      {/* ─── STATS BAR ───────────────────────────────────────── */}
       {stats && allResults.length > 0 && !loading && (
         <div className="bg-white border-b border-gray-100">
           <div className="max-w-7xl mx-auto px-8 py-3 flex flex-wrap items-center gap-6 text-xs text-gray-500">
@@ -540,7 +529,6 @@ const clearFilters = () => {
               </div>
             )}
             <div className="ml-auto flex items-center gap-2">
-              {/* View toggle */}
               <div className="flex items-center bg-gray-100 rounded-lg p-0.5">
                 <button
                   onClick={() => setViewMode("grid")}
@@ -564,10 +552,9 @@ const clearFilters = () => {
         </div>
       )}
 
-      {/* ─── RESULTS ───────────────────────────────────────────── */}
+      {/* ─── RESULTS ─────────────────────────────────────────── */}
       <section className="py-10 max-w-7xl mx-auto px-8">
 
-        {/* Sort + count row */}
         {query && !loading && allResults.length > 0 && (
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-8">
             <p className="text-sm text-gray-500">
@@ -591,7 +578,6 @@ const clearFilters = () => {
           </div>
         )}
 
-        {/* Loading */}
         {loading && (
           <div className="flex flex-col items-center gap-4 py-28">
             <div className="relative w-12 h-12">
@@ -602,7 +588,6 @@ const clearFilters = () => {
           </div>
         )}
 
-        {/* Empty — no query */}
         {!query && !loading && (
           <div className="text-center py-28">
             <div className="w-20 h-20 bg-amber-50 rounded-3xl flex items-center justify-center text-4xl mx-auto mb-5 shadow-sm">🏡</div>
@@ -622,7 +607,6 @@ const clearFilters = () => {
           </div>
         )}
 
-        {/* Empty — no raw results */}
         {query && !loading && allResults.length === 0 && (
           <div className="text-center py-28">
             <div className="w-20 h-20 bg-gray-50 rounded-3xl flex items-center justify-center text-4xl mx-auto mb-5">🏚️</div>
@@ -645,7 +629,6 @@ const clearFilters = () => {
           </div>
         )}
 
-        {/* Empty — filters too narrow */}
         {query && !loading && allResults.length > 0 && results.length === 0 && (
           <div className="text-center py-24">
             <div className="text-4xl mb-4">🔎</div>
@@ -657,7 +640,6 @@ const clearFilters = () => {
           </div>
         )}
 
-        {/* Results: GRID */}
         {!loading && results.length > 0 && viewMode === "grid" && (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {results.map((property) => (
@@ -666,7 +648,6 @@ const clearFilters = () => {
           </div>
         )}
 
-        {/* Results: LIST */}
         {!loading && results.length > 0 && viewMode === "list" && (
           <div className="flex flex-col gap-4">
             {results.map((property) => {
@@ -721,7 +702,6 @@ const clearFilters = () => {
           </div>
         )}
 
-        {/* Bottom padding */}
         <div className="h-16" />
       </section>
     </div>
