@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { slugify } from "@/lib/utils";
+import { withSeo } from "@/lib/withSeo"; // ✅ added
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -40,20 +41,22 @@ export async function POST(req: Request) {
 
     const slug = `${projectName.toLowerCase().replace(/[^a-z0-9\s]/g, "").trim().replace(/\s+/g, "-")}-${propoyeId.toLowerCase()}`;
 
-    const property = await prisma.property.create({
-      data: {
-        propoyeId, projectName, projectArea, location, address,
-        floors: floors, towers: towers,
-        possessionDate, configuration, pricingStartsFrom,
-        pricingEndsAt: pricingEndsAt ?? "",
-        images:      images      ?? [],
-        floorPlans:  floorPlans  ?? [],
-        description: description ?? "",
-        builderName: builderName ?? "",
-        slug,
-        qrCodes: qrCodes ?? [],
-      },
-    });
+    const property = await withSeo(() =>
+      prisma.property.create({
+        data: {
+          propoyeId, projectName, projectArea, location, address,
+          floors: floors, towers: towers,
+          possessionDate, configuration, pricingStartsFrom,
+          pricingEndsAt: pricingEndsAt ?? "",
+          images:      images      ?? [],
+          floorPlans:  floorPlans  ?? [],
+          description: description ?? "",
+          builderName: builderName ?? "",
+          slug,
+          qrCodes: qrCodes ?? [],
+        },
+      })
+    );
 
     return NextResponse.json(property);
   } catch (err: any) {
@@ -72,32 +75,34 @@ export async function PUT(req: Request) {
       isReadyToMove, isUnderConstruction, isNewLaunch, isEarlypossesion, qrCodes
     } = body;
 
-    const updated = await prisma.property.update({
-      where: { id },
-      data: {
-        ...(propoyeId          !== undefined && { propoyeId }),
-        ...(projectName        !== undefined && { projectName }),
-        ...(projectArea        !== undefined && { projectArea }),
-        ...(location           !== undefined && { location }),
-        ...(address            !== undefined && { address }),
-        ...(floors             !== undefined && { floors: floors }),
-        ...(towers             !== undefined && { towers: towers }),
-        ...(possessionDate     !== undefined && { possessionDate }),
-        ...(configuration      !== undefined && { configuration }),
-        ...(pricingStartsFrom  !== undefined && { pricingStartsFrom }),
-        ...(pricingEndsAt      !== undefined && { pricingEndsAt }),
-        ...(images             !== undefined && { images }),
-        ...(floorPlans         !== undefined && { floorPlans }),
-        ...(description        !== undefined && { description }),
-        ...(builderName        !== undefined && { builderName }),
-        ...(typeof isTrending === "boolean"        && { isTrending }),
-        ...(typeof isReadyToMove === "boolean"     && { isReadyToMove }),
-        ...(typeof isUnderConstruction === "boolean" && { isUnderConstruction }),
-        ...(typeof isNewLaunch === "boolean"       && { isNewLaunch }),
-        ...(typeof isEarlypossesion === "boolean"       && { isEarlypossesion }),
-        ...(qrCodes !== undefined && { qrCodes }),
-      },
-    });
+    const updated = await withSeo(() =>
+      prisma.property.update({
+        where: { id },
+        data: {
+          ...(propoyeId          !== undefined && { propoyeId }),
+          ...(projectName        !== undefined && { projectName }),
+          ...(projectArea        !== undefined && { projectArea }),
+          ...(location           !== undefined && { location }),
+          ...(address            !== undefined && { address }),
+          ...(floors             !== undefined && { floors: floors }),
+          ...(towers             !== undefined && { towers: towers }),
+          ...(possessionDate     !== undefined && { possessionDate }),
+          ...(configuration      !== undefined && { configuration }),
+          ...(pricingStartsFrom  !== undefined && { pricingStartsFrom }),
+          ...(pricingEndsAt      !== undefined && { pricingEndsAt }),
+          ...(images             !== undefined && { images }),
+          ...(floorPlans         !== undefined && { floorPlans }),
+          ...(description        !== undefined && { description }),
+          ...(builderName        !== undefined && { builderName }),
+          ...(typeof isTrending === "boolean"        && { isTrending }),
+          ...(typeof isReadyToMove === "boolean"     && { isReadyToMove }),
+          ...(typeof isUnderConstruction === "boolean" && { isUnderConstruction }),
+          ...(typeof isNewLaunch === "boolean"       && { isNewLaunch }),
+          ...(typeof isEarlypossesion === "boolean"       && { isEarlypossesion }),
+          ...(qrCodes !== undefined && { qrCodes }),
+        },
+      })
+    );
 
     return NextResponse.json(updated);
   } catch (err: any) {
@@ -109,7 +114,11 @@ export async function PUT(req: Request) {
 export async function DELETE(req: Request) {
   try {
     const { id } = await req.json();
-    await prisma.property.delete({ where: { id } });
+
+    await withSeo(() =>
+      prisma.property.delete({ where: { id } })
+    );
+
     return NextResponse.json({ message: "Deleted successfully" });
   } catch (err: any) {
     console.error("[DELETE /api/property]", err);

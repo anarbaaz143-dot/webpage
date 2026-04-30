@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { withSeo } from "@/lib/withSeo"; // ✅ added
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -17,18 +18,30 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const post = await prisma.blog.create({ data: body });
+
+  const post = await withSeo(() =>
+    prisma.blog.create({ data: body })
+  );
+
   return NextResponse.json(post);
 }
 
 export async function PUT(req: NextRequest) {
   const { id, ...data } = await req.json();
-  const post = await prisma.blog.update({ where: { id }, data });
+
+  const post = await withSeo(() =>
+    prisma.blog.update({ where: { id }, data })
+  );
+
   return NextResponse.json(post);
 }
 
 export async function DELETE(req: NextRequest) {
   const { id } = await req.json();
-  await prisma.blog.delete({ where: { id } });
+
+  await withSeo(() =>
+    prisma.blog.delete({ where: { id } })
+  );
+
   return NextResponse.json({ success: true });
 }
