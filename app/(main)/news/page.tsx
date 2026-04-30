@@ -28,7 +28,7 @@ export default function NewsPage() {
 
   const filtered = activeCategory === "All"
     ? articles
-    : articles.filter((a) => a.category === activeCategory);
+    : articles.filter((a) => a.category.trim().toLowerCase() === activeCategory.trim().toLowerCase());
 
   return (
     <div className="min-h-screen bg-white font-sans">

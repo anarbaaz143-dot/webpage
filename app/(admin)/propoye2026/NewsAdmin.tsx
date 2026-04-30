@@ -170,7 +170,7 @@ async function compressImage(file: File, maxWidthPx = 1920, maxSizeMB = 4): Prom
 
 // ─── Categories ───────────────────────────────────────────────────────────────
 
-const CATEGORIES = ["Market Update", "New Launch", "Policy & Rera", "Investment Tips", "Home Buying Guide"];
+const CATEGORIES = ["Market Update", "New Launch", "Policy & RERA", "Investment Tips", "Home Buying Guide"];
 
 // ─────────────────────────────────────────────────────────────────────────────
 // MAIN EXPORT
