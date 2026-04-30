@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
-const CATEGORIES = ["All", "Market Update", "New Launch", "Policy & RERA", "Investment Tips ", "Home Buying Guide"];
+const CATEGORIES = ["All", "Market Update", "New Launch", "Policy & RERA", "Investment Tips", "Home Buying Guide"];
 
 type Article = {
   id: number;
