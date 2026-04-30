@@ -294,12 +294,50 @@ setImage((p as any).image || "");
                 <Field label="Title" placeholder="e.g. 5 Things to Check Before Buying a Flat" value={title} onChange={setTitle} />
                 <Field label="Summary" placeholder="A short 1–2 sentence summary shown on the blog card" value={summary} onChange={setSummary} />
 
-                <Field
-  label="Image URL"
-  placeholder="https://example.com/image.jpg"
-  value={image}
-  onChange={setImage}
-/>
+<div>
+  <label className="block text-xs font-bold text-gray-400 tracking-widest uppercase mb-2">
+    Upload Image
+  </label>
+
+  <input
+    type="file"
+    accept="image/*"
+    onChange={async (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "YOUR_UPLOAD_PRESET"); // ⚠️ change this
+
+      try {
+        const res = await fetch(
+          "https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload", // ⚠️ change
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+
+        const data = await res.json();
+        setImage(data.secure_url); // ✅ store URL
+
+        showToast("Image uploaded!", "success");
+      } catch {
+        showToast("Image upload failed", "error");
+      }
+    }}
+    className="w-full bg-gray-800 border border-white/10 px-4 py-3 rounded-xl text-sm text-white"
+  />
+
+  {image && (
+    <img
+      src={image}
+      alt="preview"
+      className="mt-4 rounded-xl w-full h-48 object-cover"
+    />
+  )}
+</div>
                 <div>
                   <label className="block text-xs font-bold text-gray-400 tracking-widest uppercase mb-2">Full Content</label>
                   <textarea
