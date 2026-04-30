@@ -13,6 +13,7 @@ type Article = {
   image: string;
   category: string;
   publishedAt: string;
+  slug: string;
 };
 
 export default function NewsPage() {
@@ -102,7 +103,7 @@ export default function NewsPage() {
                 transition={{ duration: 0.5, delay: i * 0.05 }}
                 viewport={{ once: true }}
               >
-                <Link href={`/news/${article.id}`} className="group block bg-white border border-gray-100 rounded-3xl overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                <Link href={`/news/${article.slug}`} className="group block bg-white border border-gray-100 rounded-3xl overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                   <div className="relative overflow-hidden h-48">
                     <img
                       src={article.image}
