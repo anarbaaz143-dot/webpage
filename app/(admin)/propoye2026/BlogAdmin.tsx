@@ -78,6 +78,7 @@ export default function BlogAdmin({
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("Tips");
   const [instagramUrl, setInstagramUrl] = useState("");
+  const [image, setImage] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   const fetchPosts = async () => {
@@ -98,13 +99,15 @@ export default function BlogAdmin({
   const resetForm = () => {
     setEditingId(null);
     setTitle(""); setSummary(""); setContent("");
-    setCategory("Tips"); setInstagramUrl("");
+    setCategory("Tips"); setInstagramUrl(""); setImage("");
   };
 
   const handleEdit = (p: BlogPost) => {
     setEditingId(p.id);
     setTitle(p.title); setSummary(p.summary); setContent(p.content);
-    setCategory(p.category); setInstagramUrl(p.instagramUrl);
+    setCategory(p.category); 
+setInstagramUrl(p.instagramUrl);
+setImage((p as any).image || "");
     setBlogView("form");
   };
 
@@ -120,7 +123,7 @@ export default function BlogAdmin({
     }
     setSubmitting(true);
     try {
-      const body = { title, summary, content, category, instagramUrl };
+      const body = { title, summary, content, category, instagramUrl, image };
       const res = await fetch("/api/blog", {
         method: editingId ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
@@ -290,6 +293,13 @@ export default function BlogAdmin({
               <div className="space-y-4">
                 <Field label="Title" placeholder="e.g. 5 Things to Check Before Buying a Flat" value={title} onChange={setTitle} />
                 <Field label="Summary" placeholder="A short 1–2 sentence summary shown on the blog card" value={summary} onChange={setSummary} />
+
+                <Field
+  label="Image URL"
+  placeholder="https://example.com/image.jpg"
+  value={image}
+  onChange={setImage}
+/>
                 <div>
                   <label className="block text-xs font-bold text-gray-400 tracking-widest uppercase mb-2">Full Content</label>
                   <textarea

@@ -14,6 +14,7 @@ type Post = {
   instagramUrl: string;
   category: string;
   publishedAt: string;
+  image: string;
 };
 
 export default function BlogPage() {
@@ -109,23 +110,23 @@ export default function BlogPage() {
                   className="group block bg-white border border-gray-100 rounded-3xl overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
                 >
                   {/* Instagram preview card */}
-                  <div className="relative h-52 bg-gradient-to-br from-pink-500 via-purple-500 to-orange-400 flex flex-col items-center justify-center gap-3 p-6">
-                    <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
-                      <FaInstagram className="text-white text-2xl" />
-                    </div>
-                    <p className="text-white text-xs font-bold tracking-widest uppercase opacity-80">
-                      @propoye_realty
-                    </p>
-                    <div className="absolute top-3 left-3 bg-white/20 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full border border-white/30">
-                      {post.category}
-                    </div>
-                    <div className="absolute bottom-3 right-3 bg-white/20 backdrop-blur-sm text-white text-[10px] font-semibold px-2 py-1 rounded-full border border-white/20 flex items-center gap-1">
-                      <span>View on Instagram</span>
-                      <svg className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                      </svg>
-                    </div>
-                  </div>
+                  <div className="relative h-52 overflow-hidden">
+  {post.image ? (
+    <img
+      src={post.image}
+      alt={post.title}
+      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+    />
+  ) : (
+    <div className="h-full flex flex-col items-center justify-center bg-gradient-to-br from-pink-500 via-purple-500 to-orange-400">
+      <FaInstagram className="text-white text-2xl" />
+    </div>
+  )}
+
+  <div className="absolute top-3 left-3 bg-white/20 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full border border-white/30">
+    {post.category}
+  </div>
+</div>
 
                   {/* Text */}
                   <div className="p-5">

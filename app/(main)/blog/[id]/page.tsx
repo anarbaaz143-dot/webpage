@@ -14,6 +14,7 @@ type Post = {
   instagramUrl: string;
   category: string;
   publishedAt: string;
+  image: string;
 };
 
 export default function BlogDetailPage() {
@@ -299,6 +300,16 @@ export default function BlogDetailPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
             >
+
+              {post.image && (
+  <div className="max-w-3xl mx-auto px-6 mt-10">
+    <img
+      src={post.image}
+      alt={post.title}
+      className="w-full h-[350px] object-cover rounded-2xl shadow-lg"
+    />
+  </div>
+)}
 
               {/* Summary callout */}
               <div className="summary-block px-8 py-7 mb-14">
