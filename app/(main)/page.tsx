@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import YouTubeSection from "./YouTubeSection";
 import FeedbackSection from "./components/FeedbackSection";
+import SmartLinksSection from "./SmartLinksSection";
 
 const taglines = [
   { top: "Your Next Address", bottom: "Begins at Propoye" },
@@ -467,7 +468,7 @@ export default function Home() {
 </section>
 
 <FeedbackSection />
-     
+     <SmartLinksSection />  
 
     </div>
   );
