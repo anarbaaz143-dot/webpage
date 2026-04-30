@@ -29,9 +29,12 @@ model Property {
   isUnderConstruction Boolean  @default(false)
   isEarlypossesion    Boolean  @default(false)
   isNewLaunch         Boolean  @default(false)
-  createdAt           DateTime @default(now())
-  slug String @default("")
-  qrCodes String[] @default([])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt   // ✅ ADD THIS
+
+  slug      String   @default("")
+  qrCodes   String[] @default([])
 }
 
 model Setting {
