@@ -87,7 +87,6 @@ export default function BlogDetailPage() {
           font-family: 'Cormorant Garamond', serif;
         }
 
-        /* Noise texture overlay */
         .noise::after {
           content: '';
           position: absolute;
@@ -97,17 +96,6 @@ export default function BlogDetailPage() {
           z-index: 1;
         }
 
-        /* Diagonal accent line */
-        .diagonal-rule {
-          position: absolute;
-          width: 1px;
-          height: 160px;
-          background: linear-gradient(to bottom, transparent, rgba(255,200,80,0.5), transparent);
-          top: 50%;
-          transform: translateY(-50%) rotate(15deg);
-        }
-
-        /* Hero mesh gradient */
         .hero-mesh {
           background:
             radial-gradient(ellipse 80% 60% at 20% 50%, rgba(236, 72, 153, 0.35) 0%, transparent 60%),
@@ -116,7 +104,6 @@ export default function BlogDetailPage() {
             #0d0d0d;
         }
 
-        /* Animated gradient border */
         .ig-card {
           background: #141414;
           border: 1px solid rgba(255,255,255,0.08);
@@ -216,17 +203,28 @@ export default function BlogDetailPage() {
           background: linear-gradient(to left, transparent, rgba(255,255,255,0.1));
         }
 
-        .stat-chip {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 2px;
+        /* Cover image shine effect */
+        .cover-image-wrap {
+          position: relative;
+          overflow: hidden;
+          border-radius: 20px;
+        }
+        .cover-image-wrap::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            to bottom,
+            transparent 50%,
+            rgba(15,15,15,0.6) 100%
+          );
+          pointer-events: none;
         }
       `}</style>
 
       <div className="blog-detail-root">
 
-        {/* ── HERO ─────────────────────────────────────── */}
+        {/* ── HERO ── */}
         <div className="hero-mesh noise relative overflow-hidden" style={{ minHeight: "88vh", display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
 
           {/* Subtle grid */}
@@ -245,11 +243,10 @@ export default function BlogDetailPage() {
               </svg>
               All Posts
             </Link>
-
             <span className="text-white/20 text-xs tracking-widest uppercase font-light">Propoye Realty</span>
           </div>
 
-          {/* Hero content — bottom-anchored editorial style */}
+          {/* Hero content */}
           <div className="relative z-10 max-w-5xl mx-auto w-full px-6 pb-16 md:pb-24">
             <motion.div
               initial={{ opacity: 0, y: 40 }}
@@ -268,7 +265,6 @@ export default function BlogDetailPage() {
                 {post.title}
               </h1>
 
-              {/* Meta strip */}
               <div className="flex items-center gap-6 mt-8">
                 <div className="w-8 h-px bg-amber-400/60" />
                 <span className="text-white/40 text-xs tracking-[0.18em] uppercase font-light">{formattedDate}</span>
@@ -287,10 +283,9 @@ export default function BlogDetailPage() {
           </motion.div>
         </div>
 
-        {/* ── CONTENT BODY ─────────────────────────────── */}
+        {/* ── CONTENT BODY ── */}
         <div className="relative" style={{ background: "#0f0f0f" }}>
 
-          {/* Offset accent blob */}
           <div className="absolute top-0 right-0 w-96 h-96 opacity-[0.04] pointer-events-none"
             style={{ background: "radial-gradient(circle, #f59e0b 0%, transparent 70%)" }} />
 
@@ -301,15 +296,22 @@ export default function BlogDetailPage() {
               transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
             >
 
+              {/* ── COVER IMAGE — inside the motion container, above summary ── */}
               {post.image && (
-  <div className="max-w-3xl mx-auto px-6 mt-10">
-    <img
-      src={post.image}
-      alt={post.title}
-      className="w-full h-[350px] object-cover rounded-2xl shadow-lg"
-    />
-  </div>
-)}
+                <motion.div
+                  className="cover-image-wrap mb-10 shadow-2xl"
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.6, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <img
+                    src={post.image}
+                    alt={post.title}
+                    className="w-full object-cover"
+                    style={{ maxHeight: 420 }}
+                  />
+                </motion.div>
+              )}
 
               {/* Summary callout */}
               <div className="summary-block px-8 py-7 mb-14">
@@ -328,9 +330,8 @@ export default function BlogDetailPage() {
                 <div style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(251,191,36,0.4)" }} />
               </div>
 
-              {/* ── INSTAGRAM EMBED ────────────────────── */}
+              {/* ── INSTAGRAM EMBED ── */}
               <div className="ig-card p-6 md:p-8">
-                {/* Header */}
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-4">
                     <div className="w-10 h-10 rounded-xl flex items-center justify-center"
@@ -352,7 +353,6 @@ export default function BlogDetailPage() {
                   </a>
                 </div>
 
-                {/* Embed */}
                 <div className="flex justify-center">
                   <blockquote
                     className="instagram-media"
@@ -384,7 +384,7 @@ export default function BlogDetailPage() {
                 </div>
               </div>
 
-              {/* Footer spacer */}
+              {/* Footer */}
               <div className="mt-16 flex items-center justify-between">
                 <Link href="/blog" className="back-link">
                   <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">

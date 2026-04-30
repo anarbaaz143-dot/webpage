@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   FaPlus, FaEdit, FaTrash, FaEye, FaCheck, FaTimes, FaInstagram,
+  FaImage,
 } from "react-icons/fa";
 
 type BlogPost = {
@@ -14,6 +15,7 @@ type BlogPost = {
   instagramUrl: string;
   category: string;
   publishedAt: string;
+  image?: string;
 };
 
 const CATEGORIES = ["Tips", "Buying Guides", "Legal & RERA", "Real Estate Fun 😄"];
@@ -63,6 +65,103 @@ function DeleteModal({ onConfirm, onCancel }: { onConfirm: () => void; onCancel:
   );
 }
 
+/* ── IMAGE UPLOADER ── */
+function ImageUploader({
+  preview,
+  onFile,
+  onRemove,
+}: {
+  preview: string;
+  onFile: (file: File) => void;
+  onRemove: () => void;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [dragging, setDragging] = useState(false);
+  const [hovering, setHovering] = useState(false);
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file && file.type.startsWith("image/")) onFile(file);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) onFile(file);
+    // reset so same file can be re-selected
+    e.target.value = "";
+  };
+
+  /* — has preview — */
+  if (preview) {
+    return (
+      <div
+        className="relative rounded-2xl overflow-hidden cursor-pointer"
+        style={{ height: 200 }}
+        onMouseEnter={() => setHovering(true)}
+        onMouseLeave={() => setHovering(false)}
+        onClick={() => inputRef.current?.click()}
+      >
+        <img src={preview} alt="preview" className="w-full h-full object-cover" />
+
+        {/* dark overlay on hover */}
+        <motion.div
+          animate={{ opacity: hovering ? 1 : 0 }}
+          transition={{ duration: 0.15 }}
+          className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center gap-3"
+          style={{ pointerEvents: hovering ? "auto" : "none" }}
+        >
+          {/* Remove button */}
+          <button
+            onClick={(e) => { e.stopPropagation(); onRemove(); }}
+            className="flex items-center gap-2 bg-red-500 hover:bg-red-400 text-white font-bold text-xs px-4 py-2 rounded-xl transition"
+          >
+            <FaTimes size={10} /> Remove image
+          </button>
+          <span className="text-white/50 text-xs">or click to replace</span>
+        </motion.div>
+
+        {/* small badge */}
+        <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-sm text-white/70 text-[10px] font-semibold tracking-wide px-2.5 py-1 rounded-full border border-white/10">
+          Cover image
+        </div>
+
+        <input ref={inputRef} type="file" accept="image/*" onChange={handleChange} className="hidden" />
+      </div>
+    );
+  }
+
+  /* — empty drop zone — */
+  return (
+    <div
+      onClick={() => inputRef.current?.click()}
+      onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
+      onDragLeave={() => setDragging(false)}
+      onDrop={handleDrop}
+      className={`relative flex flex-col items-center justify-center gap-3 border-2 border-dashed rounded-2xl py-10 cursor-pointer transition-all duration-200 select-none
+        ${dragging
+          ? "border-pink-500/60 bg-pink-500/10 scale-[1.01]"
+          : "border-white/10 hover:border-pink-400/40 hover:bg-pink-400/5"
+        }`}
+    >
+      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-colors duration-200
+        ${dragging ? "bg-pink-500/20 text-pink-400" : "bg-white/5 text-gray-500"}`}>
+        <FaImage size={20} />
+      </div>
+      <div className="text-center">
+        <p className="text-sm font-semibold text-gray-300">
+          {dragging ? "Drop it!" : "Upload cover image"}
+        </p>
+        <p className="text-xs text-gray-600 mt-0.5">Drag & drop or click to browse</p>
+        <p className="text-xs text-gray-700 mt-1">PNG, JPG, WEBP · max 10 MB</p>
+      </div>
+
+      <input ref={inputRef} type="file" accept="image/*" onChange={handleChange} className="hidden" />
+    </div>
+  );
+}
+
 export default function BlogAdmin({
   showToast,
 }: {
@@ -80,6 +179,8 @@ export default function BlogAdmin({
   const [instagramUrl, setInstagramUrl] = useState("");
   const [image, setImage] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>("");
 
   const fetchPosts = async () => {
     setLoading(true);
@@ -99,16 +200,48 @@ export default function BlogAdmin({
   const resetForm = () => {
     setEditingId(null);
     setTitle(""); setSummary(""); setContent("");
-    setCategory("Tips"); setInstagramUrl(""); setImage("");
+    setCategory("Tips");
+    setInstagramUrl("");
+    setImage("");
+    setImageFile(null);
+    setImagePreview("");
   };
 
   const handleEdit = (p: BlogPost) => {
     setEditingId(p.id);
     setTitle(p.title); setSummary(p.summary); setContent(p.content);
-    setCategory(p.category); 
-setInstagramUrl(p.instagramUrl);
-setImage((p as any).image || "");
+    setCategory(p.category);
+    setInstagramUrl(p.instagramUrl);
+    const existingImage = (p as any).image || "";
+    setImage(existingImage);
+    // Show existing image as preview (it's already a URL, not a blob)
+    setImagePreview(existingImage);
+    setImageFile(null);
     setBlogView("form");
+  };
+
+  const handleImageFile = (file: File) => {
+    setImageFile(file);
+    // revoke old blob URL if any
+    if (imagePreview.startsWith("blob:")) URL.revokeObjectURL(imagePreview);
+    setImagePreview(URL.createObjectURL(file));
+  };
+
+  const handleImageRemove = () => {
+    if (imagePreview.startsWith("blob:")) URL.revokeObjectURL(imagePreview);
+    setImageFile(null);
+    setImagePreview("");
+    setImage("");
+  };
+
+  const uploadBlogImage = async (): Promise<string> => {
+    if (!imageFile) return image || "";
+    const formData = new FormData();
+    formData.append("images", imageFile);
+    const res = await fetch("/api/upload", { method: "POST", body: formData });
+    if (!res.ok) throw new Error("Upload failed");
+    const data = await res.json();
+    return data.images[0];
   };
 
   const isValidInstagramUrl = (url: string) =>
@@ -123,7 +256,8 @@ setImage((p as any).image || "");
     }
     setSubmitting(true);
     try {
-      const body = { title, summary, content, category, instagramUrl, image };
+      const uploadedImage = await uploadBlogImage();
+      const body = { title, summary, content, category, instagramUrl, image: uploadedImage };
       const res = await fetch("/api/blog", {
         method: editingId ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
@@ -156,7 +290,6 @@ setImage((p as any).image || "");
     }
   };
 
-  // Instagram URL preview
   const getEmbedPreview = (url: string) => {
     const clean = url.replace(/\/$/, "");
     const parts = clean.split("/");
@@ -207,15 +340,21 @@ setImage((p as any).image || "");
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
               {posts.map((post) => (
                 <div key={post.id} className="bg-gray-900 border border-white/5 rounded-2xl overflow-hidden hover:border-white/10 transition-all duration-300 group flex flex-col">
-                  {/* Instagram gradient preview */}
-                  <div className="p-0.5 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400">
-                    <div className="bg-gray-900 h-32 flex flex-col items-center justify-center gap-2">
-                      <FaInstagram className="text-3xl text-pink-400" />
-                      <span className="text-gray-500 text-[10px] font-mono truncate max-w-[90%] px-2">
-                        {getEmbedPreview(post.instagramUrl)}
-                      </span>
+                  {/* Thumbnail: real image if available, else Instagram gradient placeholder */}
+                  {post.image ? (
+                    <div className="h-32 overflow-hidden">
+                      <img src={post.image} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                     </div>
-                  </div>
+                  ) : (
+                    <div className="p-0.5 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400">
+                      <div className="bg-gray-900 h-32 flex flex-col items-center justify-center gap-2">
+                        <FaInstagram className="text-3xl text-pink-400" />
+                        <span className="text-gray-500 text-[10px] font-mono truncate max-w-[90%] px-2">
+                          {getEmbedPreview(post.instagramUrl)}
+                        </span>
+                      </div>
+                    </div>
+                  )}
 
                   <div className="p-4 flex flex-col flex-1">
                     <span className="text-[10px] font-bold text-pink-400 bg-pink-400/10 border border-pink-400/20 rounded-full px-2 py-0.5 w-fit mb-2">
@@ -290,54 +429,22 @@ setImage((p as any).image || "");
               <p className="text-xs font-bold text-pink-400 tracking-widest uppercase mb-4 flex items-center gap-2">
                 <span className="w-4 h-px bg-pink-400/50" /> Content
               </p>
-              <div className="space-y-4">
+              <div className="space-y-5">
                 <Field label="Title" placeholder="e.g. 5 Things to Check Before Buying a Flat" value={title} onChange={setTitle} />
                 <Field label="Summary" placeholder="A short 1–2 sentence summary shown on the blog card" value={summary} onChange={setSummary} />
 
-<div>
-  <label className="block text-xs font-bold text-gray-400 tracking-widest uppercase mb-2">
-    Upload Image
-  </label>
+                {/* ── NEW IMAGE UPLOADER ── */}
+                <div>
+                  <label className="block text-xs font-bold text-gray-400 tracking-widest uppercase mb-2">
+                    Cover Image <span className="ml-2 text-gray-600 normal-case tracking-normal font-normal">(optional)</span>
+                  </label>
+                  <ImageUploader
+                    preview={imagePreview}
+                    onFile={handleImageFile}
+                    onRemove={handleImageRemove}
+                  />
+                </div>
 
-  <input
-    type="file"
-    accept="image/*"
-    onChange={async (e) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
-
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("upload_preset", "YOUR_UPLOAD_PRESET"); // ⚠️ change this
-
-      try {
-        const res = await fetch(
-          "https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload", // ⚠️ change
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
-
-        const data = await res.json();
-        setImage(data.secure_url); // ✅ store URL
-
-        showToast("Image uploaded!", "success");
-      } catch {
-        showToast("Image upload failed", "error");
-      }
-    }}
-    className="w-full bg-gray-800 border border-white/10 px-4 py-3 rounded-xl text-sm text-white"
-  />
-
-  {image && (
-    <img
-      src={image}
-      alt="preview"
-      className="mt-4 rounded-xl w-full h-48 object-cover"
-    />
-  )}
-</div>
                 <div>
                   <label className="block text-xs font-bold text-gray-400 tracking-widest uppercase mb-2">Full Content</label>
                   <textarea
@@ -372,7 +479,6 @@ setImage((p as any).image || "");
                 Supports instagram.com/p/... · instagram.com/reel/... · instagram.com/tv/...
               </p>
 
-              {/* Live URL validation feedback */}
               {instagramUrl.trim() && (
                 <div className={`mt-3 flex items-center gap-2 text-xs font-semibold px-3 py-2 rounded-xl ${
                   isValidInstagramUrl(instagramUrl)
