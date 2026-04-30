@@ -129,15 +129,15 @@ export default function Home() {
           </motion.div>
 
           {/* ── Rotating tagline ── */}
-          <div className="h-[168px] md:h-[190px] flex flex-col items-center justify-center overflow-hidden mb-3">
+          <div className="min-h-[140px] md:min-h-[180px] flex flex-col items-center justify-center overflow-hidden mb-3 px-2">
             <AnimatePresence mode="wait">
               <motion.h1
                 key={taglineIndex}
-                initial={{ opacity: 0, y: 45, filter: "blur(10px)" }}
+                initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                exit={{ opacity: 0, y: -30, filter: "blur(8px)" }}
+                exit={{ opacity: 0, y: -20, filter: "blur(8px)" }}
                 transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                className="text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.1] text-center"
+                className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.2] text-center"
                 style={{ fontFamily: "'Playfair Display', serif" }}
               >
                 {taglines[taglineIndex].top}
