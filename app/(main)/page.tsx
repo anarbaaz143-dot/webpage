@@ -7,6 +7,7 @@ import Link from "next/link";
 import YouTubeSection from "./YouTubeSection";
 import FeedbackSection from "./components/FeedbackSection";
 import SmartLinksSection from "./SmartLinksSection";
+import ExploreLocalities from "./components/ExploreLocalities";
 
 const taglines = [
   { top: "Your Next Address", bottom: "Begins at Propoye" },
@@ -469,6 +470,7 @@ export default function Home() {
 
 <FeedbackSection />
      <SmartLinksSection />  
+     <ExploreLocalities />
 
     </div>
   );
