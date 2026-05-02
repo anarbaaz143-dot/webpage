@@ -42,6 +42,14 @@ export default function Home() {
   const [results, setResults] = useState<any[]>([]);
   const [trendingHomes, setTrendingHomes] = useState<any[]>([]);
   const [trendingIndex, setTrendingIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+useEffect(() => {
+  const check = () => setIsMobile(window.innerWidth < 768);
+  check();
+  window.addEventListener("resize", check);
+  return () => window.removeEventListener("resize", check);
+}, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -353,7 +361,7 @@ export default function Home() {
           </motion.div>
 
           <div>
-            <div className="relative flex justify-center items-center h-80">
+            <div className="relative flex justify-center items-center h-80 overflow-hidden md:overflow-visible">
               {trendingHomes.map((home, index) => {
                 const isActive = index === trendingIndex;
                 const isPrev = index === (trendingIndex - 1 + trendingHomes.length) % trendingHomes.length;
@@ -361,9 +369,11 @@ export default function Home() {
                 return (
                   <div key={home.id} onClick={() => (window.location.href = `/property/${home.slug || home.id}`)}
                     className={`absolute transition-all duration-700 ease-in-out cursor-pointer ${isActive ? "scale-100 opacity-100 z-20" : isPrev || isNext ? "scale-90 opacity-40 z-10" : "scale-75 opacity-0 z-0"}`}
-                    style={{ transform: `translateX(${isActive ? 0 : isPrev ? -220 : isNext ? 220 : 0}px) scale(${isActive ? 1 : isPrev || isNext ? 0.9 : 0.75})` }}
+style={{
+  transform: `translateX(${isActive ? 0 : isPrev ? (isMobile ? -100 : -220) : isNext ? (isMobile ? 100 : 220) : 0}px) scale(${isActive ? 1 : isPrev || isNext ? 0.9 : 0.75})`
+}}
                   >
-                    <div className="w-72 bg-gray-900 border border-white/10 rounded-3xl overflow-hidden hover:border-amber-400/50 transition-all duration-300 shadow-2xl group">
+                    <div className="w-[85vw] max-w-[288px] bg-gray-900 border border-white/10 rounded-3xl overflow-hidden hover:border-amber-400/50 transition-all duration-300 shadow-2xl group">
                       <div className="relative overflow-hidden h-48">
                         <img src={home.images?.[0]} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-700" alt={home.projectName} />
                         <div className="absolute inset-0 bg-gradient-to-t from-gray-900/70 to-transparent" />
@@ -388,13 +398,23 @@ export default function Home() {
             <div className="flex justify-center items-center gap-5 mt-8">
               <button onClick={() => setTrendingIndex((prev) => prev === 0 ? trendingHomes.length - 1 : prev - 1)}
                 className="w-10 h-10 flex items-center justify-center bg-white/10 hover:bg-amber-400 hover:text-gray-900 text-white transition-all duration-300 rounded-full text-xl font-bold border border-white/10">‹</button>
-              <div className="flex gap-2">
-                {trendingHomes.map((_, index) => (
-                  <button key={index} onClick={() => setTrendingIndex(index)}
-                    className={`transition-all duration-500 rounded-full ${trendingIndex === index ? "w-6 h-2.5 bg-amber-400" : "w-2.5 h-2.5 bg-white/20 hover:bg-white/50"}`}
-                  />
-                ))}
-              </div>
+<div className="flex gap-2">
+  {trendingHomes.map((_, index) => {
+    // On mobile: only show active dot + 1 before + 1 after
+    const isVisible = !isMobile
+      || index === trendingIndex
+      || index === (trendingIndex - 1 + trendingHomes.length) % trendingHomes.length
+      || index === (trendingIndex + 1) % trendingHomes.length;
+
+    if (!isVisible) return null;
+
+    return (
+      <button key={index} onClick={() => setTrendingIndex(index)}
+        className={`transition-all duration-500 rounded-full ${trendingIndex === index ? "w-6 h-2.5 bg-amber-400" : "w-2.5 h-2.5 bg-white/20 hover:bg-white/50"}`}
+      />
+    );
+  })}
+</div>
               <button onClick={() => setTrendingIndex((prev) => (prev + 1) % trendingHomes.length)}
                 className="w-10 h-10 flex items-center justify-center bg-white/10 hover:bg-amber-400 hover:text-gray-900 text-white transition-all duration-300 rounded-full text-xl font-bold border border-white/10">›</button>
             </div>
