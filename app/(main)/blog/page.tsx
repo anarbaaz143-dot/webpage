@@ -9,6 +9,7 @@ const CATEGORIES = ["All", "Tips", "Buying Guides", "Legal & RERA", "Real Estate
 
 type Post = {
   id: number;
+  slug: string;
   title: string;
   summary: string;
   instagramUrl: string;
@@ -106,7 +107,7 @@ export default function BlogPage() {
                 viewport={{ once: true }}
               >
                 <Link
-                  href={`/blog/${post.id}`}
+                  href={`/blog/${post.slug}`}
                   className="group block bg-white border border-gray-100 rounded-3xl overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
                 >
                   {/* Instagram preview card */}

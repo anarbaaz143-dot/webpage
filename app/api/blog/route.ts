@@ -2,7 +2,17 @@ export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { withSeo } from "@/lib/withSeo"; // ✅ added
+import { withSeo } from "@/lib/withSeo";
+
+function slugify(title: string): string {
+  return title
+    .trim()
+    .toLowerCase()
+    .split(/\s+/)
+    .slice(0, 4)
+    .join("-")
+    .replace(/[^a-z0-9-]/g, "");
+}
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -19,8 +29,12 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const body = await req.json();
 
+  let slug = slugify(body.title);
+  const existing = await prisma.blog.findUnique({ where: { slug } });
+  if (existing) slug = `${slug}-${Date.now()}`;
+
   const post = await withSeo(() =>
-    prisma.blog.create({ data: body })
+    prisma.blog.create({ data: { ...body, slug } })
   );
 
   return NextResponse.json(post);
@@ -29,8 +43,12 @@ export async function POST(req: NextRequest) {
 export async function PUT(req: NextRequest) {
   const { id, ...data } = await req.json();
 
+  let slug = slugify(data.title);
+  const existing = await prisma.blog.findUnique({ where: { slug } });
+  if (existing && existing.id !== id) slug = `${slug}-${Date.now()}`;
+
   const post = await withSeo(() =>
-    prisma.blog.update({ where: { id }, data })
+    prisma.blog.update({ where: { id }, data: { ...data, slug } })
   );
 
   return NextResponse.json(post);

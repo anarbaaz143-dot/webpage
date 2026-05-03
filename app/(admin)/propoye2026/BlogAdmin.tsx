@@ -9,6 +9,7 @@ import {
 
 type BlogPost = {
   id: number;
+  slug: string;
   title: string;
   summary: string;
   content: string;
@@ -366,7 +367,7 @@ export default function BlogAdmin({
                       {new Date(post.publishedAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
                     </p>
                     <div className="flex gap-2 mt-3 pt-3 border-t border-white/5">
-                      <a href={`/blog/${post.id}`} target="_blank" rel="noopener noreferrer" title="View"
+                      <a href={`/blog/${post.slug}`} target="_blank" rel="noopener noreferrer" title="View"
                         className="flex items-center justify-center w-8 h-8 bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white rounded-lg transition text-xs">
                         <FaEye />
                       </a>

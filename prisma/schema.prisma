@@ -60,6 +60,7 @@ model News {
 model Blog {
   id           Int      @id @default(autoincrement())
   title        String
+  slug         String   @unique
   summary      String
   content      String   @db.Text
   instagramUrl String
