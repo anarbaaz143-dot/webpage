@@ -126,42 +126,6 @@ const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
       </div>
     </div>
 
-{/* ─── CTA ─── */}
-<section className="py-24 text-center bg-white relative overflow-hidden">
-  <div className="absolute inset-0 opacity-[0.03]"
-    style={{
-      backgroundImage: "radial-gradient(circle at 2px 2px, #000 1px, transparent 0)",
-      backgroundSize: "28px 28px",
-    }}
-  />
-  <motion.div
-    initial={{ opacity: 0, y: 40 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.8 }}
-    viewport={{ once: true }}
-    className="relative z-10 max-w-2xl mx-auto px-6"
-  >
-    <h2
-      className="text-4xl md:text-5xl font-extrabold mb-5 leading-tight"
-      style={{ fontFamily: "'Playfair Display', serif" }}
-    >
-      Ready to Find Your{" "}
-      <span className="text-amber-500">Dream Property?</span>
-    </h2>
-    <p className="text-gray-500 mb-10 text-base">
-      Let us help you discover the perfect place today.
-    </p>
-    <a
-      href="/"
-      className="inline-flex items-center gap-2 bg-gray-900 hover:bg-amber-400 hover:text-gray-900 text-white font-bold px-9 py-4 rounded-2xl text-base transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_rgba(251,191,36,0.35)] shadow-lg"
-    >
-      Explore Properties
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-      </svg>
-    </a>
-  </motion.div>
-</section>
 </>
   );
 }
