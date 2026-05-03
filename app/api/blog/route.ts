@@ -17,11 +17,20 @@ function slugify(title: string): string {
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
+  const slug = searchParams.get("slug");
+
   if (id) {
     const post = await prisma.blog.findUnique({ where: { id: Number(id) } });
     if (!post) return NextResponse.json({ error: "Not found" }, { status: 404 });
     return NextResponse.json(post);
   }
+
+  if (slug) {
+    const post = await prisma.blog.findUnique({ where: { slug } });
+    if (!post) return NextResponse.json({ error: "Not found" }, { status: 404 });
+    return NextResponse.json(post);
+  }
+
   const posts = await prisma.blog.findMany({ orderBy: { publishedAt: "desc" } });
   return NextResponse.json(posts);
 }

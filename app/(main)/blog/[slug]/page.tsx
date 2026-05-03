@@ -8,6 +8,7 @@ import { FaInstagram } from "react-icons/fa";
 
 type Post = {
   id: number;
+  slug: string;
   title: string;
   summary: string;
   content: string;
@@ -18,16 +19,16 @@ type Post = {
 };
 
 export default function BlogDetailPage() {
-  const { id } = useParams();
+  const { slug } = useParams();
   const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`/api/blog?id=${id}`)
+    fetch(`/api/blog?slug=${slug}`)
       .then((r) => r.json())
       .then((data) => { setPost(data); setLoading(false); })
       .catch(() => setLoading(false));
-  }, [id]);
+  }, [slug]);
 
   useEffect(() => {
     if (!post) return;
