@@ -18,6 +18,10 @@ export async function GET() {
         <loc>${baseUrl}/sitemap-news.xml</loc>
       </sitemap>
 
+      <sitemap>
+  <loc>${baseUrl}/sitemap-localities.xml</loc>
+</sitemap>
+
     </sitemapindex>`,
     { headers: { "Content-Type": "application/xml" } }
   );
