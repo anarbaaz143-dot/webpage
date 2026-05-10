@@ -150,7 +150,7 @@ function TrendingCard({ loc, router }: { loc: LocalityData; router: any }) {
 
   return (
     <div
-      onClick={() => hasProps && router.push(`/locality/${loc.name.toLowerCase().replace(/\s+/g, "-")}`)}
+      onClick={() => hasProps && router.push(`/property-for-sale-in-${loc.name.toLowerCase().replace(/\s+/g, "-")}`)}
       className={`relative group rounded-2xl border p-6 transition-all duration-300 overflow-hidden
         ${hasProps
           ? "bg-white border-gray-100 cursor-pointer hover:border-amber-300 hover:-translate-y-1 hover:shadow-[0_16px_48px_rgba(251,191,36,0.13)]"
@@ -218,7 +218,7 @@ function RegularCard({ loc, router }: { loc: LocalityData; router: any }) {
 
   return (
     <div
-      onClick={() => hasProps && router.push(`/locality/${loc.name.toLowerCase().replace(/\s+/g, "-")}`)}
+      onClick={() => hasProps && router.push(`/property-for-sale-in-${loc.name.toLowerCase().replace(/\s+/g, "-")}`)}
       className={`relative group rounded-2xl border p-5 transition-all duration-300
         ${hasProps
           ? "bg-white border-gray-100 cursor-pointer hover:border-amber-300 hover:bg-amber-50/20 hover:-translate-y-1 hover:shadow-[0_10px_32px_rgba(251,191,36,0.1)]"

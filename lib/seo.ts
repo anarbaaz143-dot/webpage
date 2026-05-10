@@ -7,3 +7,13 @@ export function pingGoogle() {
     console.error("Google ping failed", err);
   }
 }
+
+// ADD THIS to the bottom of your existing app/lib/seo.ts
+
+export function buildSeoUrl(locality: string, bhk?: string): string {
+  const slug = locality.toLowerCase().replace(/\s+/g, "-");
+  if (bhk) {
+    return `/${bhk}bhk-flats-in-${slug}`;
+  }
+  return `/property-for-sale-in-${slug}`;
+}
