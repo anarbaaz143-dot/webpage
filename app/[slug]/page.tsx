@@ -102,9 +102,9 @@ export async function generateMetadata({
 export default async function SeoLandingPage({
   params,
 }: {
-  params: { "seo-slug": string };
+  params: { slug: string };
 }) {
-  const parsed = parseSlug(params["seo-slug"]);
+  const parsed = parseSlug(params.slug);
   if (!parsed) notFound();
 
   // Fetch properties server-side
