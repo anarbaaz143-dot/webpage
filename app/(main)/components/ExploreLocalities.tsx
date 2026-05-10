@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 type LocalityData = {
   name: string;
+  slug: string;   // ← add this
   trending: boolean;
   icon: string;
   emoji: string;
@@ -13,12 +14,12 @@ type LocalityData = {
 };
 
 const LOCALITIES = [
-  { name: "Taloja",         trending: true,  icon: "🏙️", emoji: "🔥" },
-  { name: "Kharghar",       trending: true,  icon: "🌆", emoji: "🔥" },
-  { name: "Panvel",         trending: false, icon: "🏘️", emoji: "📍" },
-  { name: "Nerul",          trending: false, icon: "🌊", emoji: "📍" },
-  { name: "Upper Kharghar", trending: false, icon: "⛰️", emoji: "📍" },
-  { name: "Seawoods",       trending: false, icon: "🌴", emoji: "📍" },
+  { name: "Taloja",         slug: "taloja",         trending: true,  icon: "🏙️", emoji: "🔥" },
+  { name: "Kharghar",       slug: "kharghar",       trending: true,  icon: "🌆", emoji: "🔥" },
+  { name: "Panvel",         slug: "panvel",         trending: false, icon: "🏘️", emoji: "📍" },
+  { name: "Nerul",          slug: "nerul",          trending: false, icon: "🌊", emoji: "📍" },
+  { name: "Upper Kharghar", slug: "upper-kharghar", trending: false, icon: "⛰️", emoji: "📍" },
+  { name: "Seawoods",       slug: "seawoods",       trending: false, icon: "🌴", emoji: "📍" },
 ];
 
 function parsePriceCr(raw: string): number | null {
@@ -150,7 +151,8 @@ function TrendingCard({ loc, router }: { loc: LocalityData; router: any }) {
 
   return (
     <div
-      onClick={() => hasProps && router.push(`/search?q=${encodeURIComponent(loc.name)}`)}
+      onClick={() => hasProps && router.push(`/locality/${loc.slug}`)}
+
       className={`relative group rounded-2xl border p-6 transition-all duration-300 overflow-hidden
         ${hasProps
           ? "bg-white border-gray-100 cursor-pointer hover:border-amber-300 hover:-translate-y-1 hover:shadow-[0_16px_48px_rgba(251,191,36,0.13)]"
@@ -218,7 +220,7 @@ function RegularCard({ loc, router }: { loc: LocalityData; router: any }) {
 
   return (
     <div
-      onClick={() => hasProps && router.push(`/search?q=${encodeURIComponent(loc.name)}`)}
+      onClick={() => hasProps && router.push(`/locality/${loc.slug}`)}
       className={`relative group rounded-2xl border p-5 transition-all duration-300
         ${hasProps
           ? "bg-white border-gray-100 cursor-pointer hover:border-amber-300 hover:bg-amber-50/20 hover:-translate-y-1 hover:shadow-[0_10px_32px_rgba(251,191,36,0.1)]"
