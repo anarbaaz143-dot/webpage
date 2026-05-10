@@ -195,11 +195,11 @@ export default async function SeoLandingPage({
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {properties.map((property: any) => (
-              <a>
+              <a
                 key={property.id}
                 href={`/property/${property.slug || property.id}`}
                 className="group bg-white border border-gray-100 rounded-3xl overflow-hidden hover:border-amber-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col"
-              
+              >
                 <div className="relative h-52 overflow-hidden">
                   <img
                     src={property.images?.[0]}
