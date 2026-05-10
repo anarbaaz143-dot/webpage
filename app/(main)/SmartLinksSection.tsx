@@ -51,13 +51,11 @@ const POPULAR_LOCALITIES = [
 
 // REPLACE WITH THESE:
 function localityHref(locality: string) {
-  const slug = locality.toLowerCase().replace(/\s+/g, "-");
-  return `/property-for-sale-in-${slug}`;
+  return `/search?q=${encodeURIComponent(locality)}`;
 }
 
 function bhkLocalityHref(locality: string, bhk: string) {
-  const slug = locality.toLowerCase().replace(/\s+/g, "-");
-  return `/${bhk}bhk-flats-in-${slug}`;
+  return `/search?q=${encodeURIComponent(locality)}&bhk=${bhk}`;
 }
 // ─── Component ───────────────────────────────────────────────────────────────
 
