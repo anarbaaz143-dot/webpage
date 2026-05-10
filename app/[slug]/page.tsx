@@ -69,9 +69,9 @@ export function parseSlug(slug: string): ParsedSlug | null {
 export async function generateMetadata({
   params,
 }: {
-  params: { "seo-slug": string };
+  params: { slug: string };
 }): Promise<Metadata> {
-  const parsed = parseSlug(params["seo-slug"]);
+  const parsed = parseSlug(params.slug);
   if (!parsed) return { title: "Not Found" };
 
   const baseUrl = "https://www.propoye.com";
