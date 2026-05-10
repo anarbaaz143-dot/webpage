@@ -59,9 +59,10 @@ export function parseSlug(slug: string): ParsedSlug | null {
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const parsed = parseSlug(params.slug);
+  const { slug } = await params;
+  const parsed = parseSlug(slug);
   if (!parsed) return { title: "Not Found" };
 
   const baseUrl = "https://www.propoye.com";
@@ -87,11 +88,12 @@ export async function generateMetadata({
 export default async function SeoLandingPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const parsed = parseSlug(params.slug);
+  const { slug } = await params;
+  const parsed = parseSlug(slug);
   if (!parsed) {
-    redirect(`/search?q=${params.slug}`);
+    redirect(`/search?q=${slug}`);
   }
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.propoye.com";
