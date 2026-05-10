@@ -15,7 +15,7 @@
     "@types/pg": "^8.20.0",
     "cloudinary": "^2.9.0",
     "framer-motion": "^12.34.3",
-    "next": "16.1.6",
+    "next": "^16.2.6",
     "pg": "^8.20.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
@@ -27,7 +27,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.1.6",
+    "eslint-config-next": "^16.2.6",
     "prisma": "^7.4.1",
     "tailwindcss": "^4",
     "typescript": "^5"
